@@ -1,0 +1,15 @@
+{
+  "name": "cah-backend",
+  "version": "0.0.1",
+  "description": "Backend for CAH.",
+  "main": "index.js",
+  "scripts": {
+    "dev": "node ./src/server.js"
+  },
+  "author": "IJustDev",
+  "license": "ISC",
+  "dependencies": {
+    "express": "^4.17.1",
+    "express-ws": "^4.0.0"
+  }
+}
