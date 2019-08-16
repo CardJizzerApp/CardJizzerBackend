@@ -10,10 +10,9 @@ const {Game} = require("./game");
 
 const websocketServer = new ws.Server({port: 83});
 
-
 registerCommands();
 
-new Game(0, ['ZR64P'], "false", 0, 0).start();
+// new Game(0, ['ZR64P'], "false", 0, 0).start();
 
 websocketServer.on("connection", ws => {
     ws.uuid = v4();
@@ -36,3 +35,7 @@ websocketServer.on("connection", ws => {
         ws.send(response);
     })
 });
+
+exports.stopServer = function() {
+    websocketServer.close();    
+}

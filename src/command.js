@@ -1,5 +1,8 @@
 const {ErrorCodeHelper, Responses} = require("./helper");
-const {allGames, allUsers, getPlayerByUUID, Player, getGameByUUID, GameState} = require("./game");
+const {allGames, getGameByUUID, GameState, Game} = require("./game");
+
+
+const {getPlayerByUUID, Player, allUsers} = require("./player");
 
 const allCommands = [];
 
@@ -26,7 +29,7 @@ const fetchGames = class extends this.Command {
     run(args) {
         const allGamesToServe = [];
         for (let i = 0; i !== allGames.length; i++) {
-            const game = allGames[i];
+            const game = JSON.parse(JSON.stringify(allGames[i]));
             game.password = undefined;
             game.players = undefined;
             allGamesToServe.push(game);
@@ -44,15 +47,20 @@ const createGame = class extends this.Command {
         super("creategame", 4);
     }
 
-    run(args) {
+    run(args, ws) {
+        const player = getPlayerByUUID(ws.uuid);
+        if (player === undefined) {
+            return ech.sendResponse(Responses.NOT_LOGGED_IN, null);
+        }
         const maxPlayers = args[0];
         const deckIds = args[1];
         const password = args[2];
         const passwordRequired = password !== "false";
         const pointsToWin = args[3];
         const maxRoundTime = args[4];
-
-        return ech.sendResponse(Responses.OK, []);
+        const game = new Game(maxPlayers, deckIds, password, pointsToWin, maxRoundTime);
+        player.join(game.id);
+        return ech.sendResponse(Responses.OK, game);
     }
 
 }
@@ -110,6 +118,19 @@ const join = class extends this.Command {
     }
 
     run(args, ws) {
+        const gameUUID = args[0];
+        const player = getPlayerByUUID(ws.uuid);
+        if (player === undefined) {
+            return ech.sendResponse(Responses.NOT_LOGGED_IN, null);
+        }
+        const game = getGameByUUID(gameUUID);
+        if (game === undefined || game.state === GameState.STOPPED) {
+            return ech.sendResponse(Responses.GAME_NOT_FOUND, null);
+        }
+        if (player.join(game.id)) {
+            return ech.sendResponse(Responses.OK, null);
+        } 
+        return ech.sendResponse(Responses.COULD_NOT_JOIN, null);
 
     }
 
@@ -157,6 +178,9 @@ exports.registerCommands = function() {
     new fetchGames();
     new setUsername();
     new logout();
+    new join();
+    new playCard();
+    new selectCard();
 }
 
 exports.findCommand = function(commandname) {
