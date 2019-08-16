@@ -1,5 +1,5 @@
 const {ErrorCodeHelper, Responses} = require("./helper");
-const {allGames, allUsers, Game} = require("./game");
+const {allGames, allUsers, getPlayerByUUID, Player, getGameByUUID, GameState} = require("./game");
 
 const allCommands = [];
 
@@ -66,15 +66,18 @@ const setUsername = class extends this.Command {
 
     run(args, ws) {
         const usernameGiven = args[0];
-        const usernameValues = Object.values(allUsers);
-        for (let i = 0; i !== usernameValues.length; i++) {
-            const test = [];
-            const username = usernameValues[i].toLowerCase();
-            if (usernameGiven.toLowerCase() === username) {
+        for (let i = 0; i!== allUsers.length; i++) {
+            const player = allUsers[i];
+            if (player.username.toLowerCase() === usernameGiven.toLowerCase()) {
                 return ech.sendResponse(Responses.NAME_ALREADY_TAKEN, null);
-            }
+            } 
         }
-        allUsers[ws.uid] = usernameGiven;
+        if (getPlayerByUUID(ws.uuid) === undefined) {
+            new Player(ws, usernameGiven);
+        } else {
+            getPlayerByUUID(ws.uuid).username = usernameGiven;
+
+        }
         return ech.sendResponse(Responses.OK, {newUsername: args[0]});
     }
 
@@ -87,9 +90,14 @@ const logout = class extends this.Command {
     }
 
     run(args, ws) {
-        delete allUsers[ws.uid];
-        console.log(allUsers);
-        return "Logged out successfully!";
+        for (let i = 0; i !== allUsers.length; i++) {
+            const player = allUsers[i];
+            if (player.uuid === ws.uuid) {
+                allUsers.splice(i, 1);
+                return ech.sendResponse(Responses.OK, null);        
+            }
+        }
+        return ech.sendResponse(Responses.NOT_LOGGED_IN, null);        
     }
     
 }
@@ -105,6 +113,43 @@ const join = class extends this.Command {
 
     }
 
+}
+
+const playCard = class extends this.Command {
+
+    // playcard [cardUUID: string]
+    constructor() {
+        super("playCard", 1);
+    }
+
+    run(args, ws) {
+
+    }
+
+}
+
+const selectCard = class extends this.Command {
+
+    // selectcard [cardUUID: string]
+    constructor() {
+        super("selectcard", 1);
+    }
+
+    run(args, ws) {
+        const player = getPlayerByUUID(ws.uuid);
+        if (player === undefined) {
+            return ech.sendResponse(Responses.NOT_LOGGED_IN, null);
+        }
+        if (player.currentGameUUID === -1) {
+            return ech.sendResponse(Responses.NOT_INGAME, null);
+        }
+        const game = getGameByUUID(player.currentGameUUID);
+        if (game === undefined || game.state !== GameState.INGAME) {
+            return ech.sendResponse(Responses.NOT_INGAME);
+        }
+        const hand = game.playerCardStacks[player];
+        player.playCard(args[1]);
+    }
 }
 
 exports.registerCommands = function() {

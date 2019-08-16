@@ -16,7 +16,7 @@ registerCommands();
 new Game(0, ['ZR64P'], "false", 0, 0).start();
 
 websocketServer.on("connection", ws => {
-    ws.uid = v4();
+    ws.uuid = v4();
     ws.on("message", message => {
 
         const args = message.split(" ");
