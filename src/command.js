@@ -25,7 +25,7 @@ const { start } = require("./commands/start");
 
 
 exports.registerCommands = function () {
-    new createGame("", 0, false);
+    new createGame();
     new fetchGames();
     new setUsername();
     new logout();

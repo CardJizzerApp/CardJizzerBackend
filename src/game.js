@@ -14,9 +14,9 @@ const allGames = [];
 module.exports.allGames = allGames;
 
 const GameState = {
-    INGAME: {joinable: false},
-    STOPPED: {joinable: false},
-    LOBBY: {joinable: true},
+    INGAME: { joinable: false },
+    STOPPED: { joinable: false },
+    LOBBY: { joinable: true },
 }
 module.exports.GameState = GameState;
 
@@ -36,6 +36,7 @@ const Game = class {
             calls: [],
             responses: [],
         };
+        this.scoreboard = {};
         this.playerCardStacks = {};
         allGames.push(this);
     }
@@ -74,7 +75,7 @@ const Game = class {
                             }
                             this.cards.calls.push(new Card(text, "call"));
                         }
-    
+
                         for (let i = 0; i !== deck.responses.length; i++) {
                             const response = deck.responses[i];
                             this.cards.responses.push(new Card(response.text));
@@ -86,8 +87,8 @@ const Game = class {
     }
 
     /**
-     * 
-     * @param {*} player 
+     *
+     * @param {*} player
      * @return {boolean}
      */
     addToGame(player) {
@@ -109,14 +110,39 @@ const Game = class {
     initGame() {
         for (let i = 0; i !== this.players.length; i++) {
             const player = this.players[i];
+            this.scoreboard[player.uuid] = 0;
             for (let j = 0; j !== GAME_CONFIG.CARDS_AT_START; j++) {
                 this.giveCard(player);
             }
         }
     }
 
-    nextRound() {
-        const newCardJizzer = this.round === undefined || this.round.cardJizzer === undefined ? this.players[0] : this.players[this.players.indexOf(this.round.cardJizzer) == this.players.cardJizzer.length-1 ? 0 : this.players.indexOf(this.round.cardJizzer)];
+    nextRound(uuid) {
+        if (uuid !== undefined) {
+            this.scoreboard[uuid] = this.scoreboard += 1;
+            if (this.scoreboard[uuid] >= 8) {
+                this.state = GameState.STOPPED;
+                setTimeout(deleteRoom, 20000);
+                // TODO: Event - GameStoppingSoon
+                return;
+            }
+        }
+
+        let indexOfNewCardJizzer = 0;
+
+        if (this.round === undefined || this.round.cardJizzer === undefined) {
+            indexOfNewCardJizzer = 0;
+        } else {
+            const indexOfCurrentCardJizzer = this.players.indexOf(this.round.cardJizzer);
+            indexOfNewCardJizzer = indexOfCurrentCardJizzer;
+            if (indexOfCurrentCardJizzer + 1 >= this.players.length) {
+                indexOfNewCardJizzer = 0;
+            } else {
+                indexOfNewCardJizzer += 1;
+            }
+        }
+
+        const newCardJizzer = this.players[indexOfNewCardJizzer];
         this.round = new Round(newCardJizzer, this.randomCard("call"), this.players.length);
         this.currentRound += 1;
         if (this.currentRound === 1) {
@@ -130,8 +156,8 @@ const Game = class {
     }
 
     /**
-     * 
-     * @param {*} type 
+     *
+     * @param {*} type
      * @return {Card}
      */
     randomCard(type) {
@@ -141,7 +167,7 @@ const Game = class {
             return this.cards.responses[Math.floor(Math.random() * Math.floor(this.cards.responses.length))];
         }
     }
-    
+
     /**
      * @return {Card[]}
      */
@@ -149,12 +175,16 @@ const Game = class {
         return this.playerCardStacks[player.uuid];
     }
 
+    deleteRoom() {
+        delete allGames[this];
+    }
+
 }
 module.exports.Game = Game;
 
 /**
- * 
- * @param {*} deckId 
+ *
+ * @param {*} deckId
  * @return {Card[]}
  */
 function getDeckFromCache(deckId) {
@@ -162,18 +192,18 @@ function getDeckFromCache(deckId) {
     for (let j = 0; j !== cCkeys.length; j++) {
         const cDeck = cardCache[cCkeys[j]];
         if (deckId === cCKeys[j]) {
-            return cDeck;                
+            return cDeck;
         }
     }
 }
 module.exports.getDeckFromCache = getDeckFromCache;
 
 /**
- * 
+ *
  * @param {*} uuid
  * @return {Game}
  */
-const getGameByUUID = function(uuid) {
+const getGameByUUID = function (uuid) {
     for (let i = 0; i !== allGames.length; i++) {
         const game = allGames[i];
         if (game.id === uuid) {

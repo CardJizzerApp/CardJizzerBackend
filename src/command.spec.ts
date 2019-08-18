@@ -4,10 +4,11 @@ const { stopServer } = require("./server");
 
 describe('commandTests', () => {
     let websocket, player2;
-    before(() => {
+    before((done) => {
         require("./server");
         websocket = new ws("ws://localhost:83");
         player2 = new ws("ws://localhost:83");
+        done();
     })
     it("should return true", () => {
         return assert(true);
@@ -98,15 +99,31 @@ describe('commandTests', () => {
         player2.send("playcard " + carduuid2);
         player2.send("playcard " + carduuid3);
     });
+    let cardToPick = undefined;
     it("fetchallcards", (done) => {
         websocket.once("message", msg => {
-            console.log(JSON.parse(msg).jsonData);
             const errorCode = JSON.parse(msg).errorCode;
             assert.equal(errorCode, 0);
+            const jsonData = JSON.parse(msg).jsonData;
+            cardToPick = jsonData[Object.keys(jsonData)[0]][0];
             done();
         });
         websocket.send("fetchallcards");
     });
+    it("pickcard", () => {
+        player2.once("message", msg => {
+            const errorCode = JSON.parse(msg).errorCode;
+            assert.equal(errorCode, 10);
+        });
+        player2.send("pickcard aasdd");
+        websocket.once("message", msg => {
+            const errorCode = JSON.parse(msg).errorCode;
+            assert.equal(errorCode, 0);
+        });
+        console.log(cardToPick);
+        console.log(cardToPick.uuid);
+        websocket.send("pickcard asddf");
+    })
     after(() => {
         stopServer();
     });

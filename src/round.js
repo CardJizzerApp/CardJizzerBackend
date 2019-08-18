@@ -1,13 +1,13 @@
-const {CardJizzerPickedEvent} = require("./eventhandler");
+const { CardJizzerPickedEvent } = require("./eventhandler");
 
 const phaseState = {
-    PlayCards: {name: "playCards", id: 1},
-    SelectCard: {name: "selectCard", id: 2},
+    PlayCards: { name: "playCards", id: 1 },
+    SelectCard: { name: "selectCard", id: 2 },
 };
 module.exports.phaseState = phaseState;
 
 module.exports.Round = class {
-    
+
     constructor(cardJizzer, blackCard, playerAmount) {
         this.allCards = {};
         this.playerAmount = playerAmount;
@@ -19,7 +19,7 @@ module.exports.Round = class {
     }
 
     flipAllCards() {
-        for (let i = 0; i!== this.allCards; i++) {
+        for (let i = 0; i !== this.allCards; i++) {
             const card = this.allCards;
             card.show = true;
         }
@@ -39,9 +39,9 @@ module.exports.Round = class {
     }
 
     /**
-     * 
+     *
      * @param {Player} player
-     * @return {boolean} 
+     * @return {boolean}
      */
     hasAlreadyPicked(player) {
         return this.picked[player.uuid] !== undefined && this.picked[player.uuid].length >= this.cardsAmount;
