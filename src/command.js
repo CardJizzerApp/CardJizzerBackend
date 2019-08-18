@@ -1,6 +1,6 @@
 const {ErrorCodeHelper, Responses} = require("./helper");
 const {allGames, getGameByUUID, GameState, Game} = require("./game");
-
+const {Round, phaseState} = require("./round");
 
 const {getPlayerByUUID, Player, allUsers} = require("./player");
 
@@ -10,9 +10,10 @@ const ech = new ErrorCodeHelper();
 
 exports.Command = class {
 
-    constructor(commandname, argsLength) {
+    constructor(commandname, argsLength, async) {
         this.commandname = commandname;
         this.argsLength = argsLength;
+        this.async = async;
         allCommands.push(this);
     }
 
@@ -58,7 +59,7 @@ const createGame = class extends this.Command {
         const passwordRequired = password !== "false";
         const pointsToWin = args[3];
         const maxRoundTime = args[4];
-        const game = new Game(maxPlayers, deckIds, password, pointsToWin, maxRoundTime);
+        const game = new Game(maxPlayers, ['SFG96'], password, pointsToWin, maxRoundTime);
         player.join(game.id);
         return ech.sendResponse(Responses.OK, game);
     }
@@ -127,6 +128,9 @@ const join = class extends this.Command {
         if (game === undefined || game.state === GameState.STOPPED) {
             return ech.sendResponse(Responses.GAME_NOT_FOUND, null);
         }
+        if (game.state === GameState.INGAME) {
+            return ech.sendResponse(Responses.NOT_INGAME, null)
+        }
         if (player.join(game.id)) {
             return ech.sendResponse(Responses.OK, null);
         } 
@@ -140,20 +144,36 @@ const playCard = class extends this.Command {
 
     // playcard [cardUUID: string]
     constructor() {
-        super("playCard", 1);
+        super("playcard", 1);
     }
 
     run(args, ws) {
-
+        const cardUUID = args[0];
+        const player = getPlayerByUUID(ws.uuid);
+        if (player === undefined) {
+            return ech.sendResponse(Responses.NOT_LOGGED_IN, null);
+        }
+        const game = getGameByUUID(player.currentGameUUID);
+        if (game === undefined || game.state !== GameState.INGAME) {
+            return ech.sendResponse(Responses.NOT_INGAME, null);
+        }
+        const round = game.round;
+        if (round.phase === phaseState.SelectCard) {
+            return ech.sendResponse(Responses.PICK_PHASE_OVER, null);
+        }
+        if (player.playCard(cardUUID)) {
+            return ech.sendResponse(Responses.OK, null);
+        }
+        return ech.sendResponse(Responses.CARD_COULD_NOT_BE_PLAYED, null);
     }
 
 }
 
-const selectCard = class extends this.Command {
+const pickCard = class extends this.Command {
 
     // selectcard [cardUUID: string]
     constructor() {
-        super("selectcard", 1);
+        super("pickcard", 1);
     }
 
     run(args, ws) {
@@ -166,11 +186,91 @@ const selectCard = class extends this.Command {
         }
         const game = getGameByUUID(player.currentGameUUID);
         if (game === undefined || game.state !== GameState.INGAME) {
-            return ech.sendResponse(Responses.NOT_INGAME);
+            return ech.sendResponse(Responses.NOT_INGAME, null);
         }
-        const hand = game.playerCardStacks[player];
+        if (game.round.cardJizzer.uuid !== player.uuid) {
+            return ech.sendResponse(Responses.NOT_CARD_JIZZER, null);
+        }
+        const pickable = getGameByUUID(player).round.allCards;
+        console.log(pickable);
         player.playCard(args[1]);
     }
+}
+
+const start = class extends this.Command {
+
+    constructor() {
+        super("start", 0, true);
+    }
+
+    async run(args, ws) {
+        const player = getPlayerByUUID(ws.uuid);
+        if (player === undefined) {
+            return ech.sendResponse(Responses.NOT_LOGGED_IN, null);
+        }
+        if (player.currentGameUUID === -1) {
+            return ech.sendResponse(Responses.NOT_INGAME, null);
+        }
+        const game = getGameByUUID(player.currentGameUUID);
+        if (game === undefined || game.state !== GameState.LOBBY) {
+            return ech.sendResponse(Responses.GAME_ALREADY_INGAME, null);
+        }
+        return game.start().then(() => {
+            return ech.sendResponse(Responses.OK, game);
+        });
+    }
+
+}
+
+const fetchCards = class extends this.Command {
+
+    constructor() {
+        super("fetchcards", 0);
+    }
+
+    run(args, ws) {
+        const player = getPlayerByUUID(ws.uuid);
+        if (player === undefined) {
+            return ech.sendResponse(Responses.NOT_LOGGED_IN, null);
+        }
+        if (player.currentGameUUID === -1) {
+            return ech.sendResponse(Responses.NOT_INGAME, null);
+        }
+        const game = getGameByUUID(player.currentGameUUID);
+        if (game === undefined || game.state !== GameState.INGAME) {
+            return ech.sendResponse(Responses.NOT_INGAME, null);
+        }
+        const hand = game.getCardsOfPlayer(player);
+        return ech.sendResponse(Responses.OK, hand);
+    }
+
+}
+
+const fetchAllPickedCards = class extends this.Command {
+
+    constructor() {
+        super("fetchAllCards", 0);        
+    }
+
+    run(args, ws) {
+        const player = getPlayerByUUID(ws.uuid);
+        if (player === undefined) {
+            return ech.sendResponse(Responses.NOT_LOGGED_IN, null);
+        }
+        if (player.currentGameUUID === -1) {
+            return ech.sendResponse(Responses.NOT_INGAME, null);
+        }
+        const game = getGameByUUID(player.currentGameUUID);
+        if (game === undefined || game.state !== GameState.INGAME) {
+            return ech.sendResponse(Responses.NOT_INGAME, null);
+        }
+        const round = game.round;
+        if (round.phase === phaseState.PlayCards) {
+            return ech.sendResponse(Responses.PLAYERS_NEED_TO_PICK_FIRST, null);
+        }
+        return ech.sendResponse(Responses.OK, game.round.allCards);
+    }
+
 }
 
 exports.registerCommands = function() {
@@ -180,7 +280,11 @@ exports.registerCommands = function() {
     new logout();
     new join();
     new playCard();
-    new selectCard();
+    new playCard();
+    new start();
+    new fetchCards();
+    new pickCard();
+    new fetchAllPickedCards();
 }
 
 exports.findCommand = function(commandname) {

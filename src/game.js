@@ -7,6 +7,8 @@ const { GAME_CONFIG } = require("./config");
 
 const api = new CardCastAPI.CardcastAPI();
 
+const cardCache = {};
+
 const allGames = [];
 
 exports.allGames = allGames;
@@ -34,45 +36,60 @@ const Game = class {
             calls: [],
             responses: [],
         };
-        // this.fetchDecks(deckIds);
         this.playerCardStacks = {};
         allGames.push(this);
     }
 
-    start() {
+    async start() {
         this.state = GameState.INGAME;
-        this.nextRound();
+        return this.fetchDecks(this.deckIds).then(() => {
+            this.nextRound();
+        });
     }
 
     stop() {
         this.state = GameState.LOBBY;
     }
 
-    fetchDecks(deckIds) {
-        for (let i = 0; i!== deckIds.length; i++) {
+    async fetchDecks(deckIds) {
+        for (let i = 0; i !== deckIds.length; i++) {
             const deckId = deckIds[i];
-
-            api.deck(deckId).then(deck => {
-                deck.populatedPromise.then(() => {
-                    this.cards.calls.push(deck.calls);
-                    for (let i = 0; i !== deck.calls.length; i++) {
-                        const call = deck.calls[i];
-                        let text = "";
-                        for (let j = 0; j !== call.text.length; j++) {
-                            text += call.text[j] + "{w}";
+            const deckFromCache = getDeckFromCache(deckId);
+            if (deckFromCache !== undefined) {
+                for (let i = 0; i !== deckFromCache.responses.length; i++) {
+                    this.cards.responses.push(deckFromCache.responses[i]);
+                }
+                for (let i = 0; i !== deckFromCache.calls.length; i++) {
+                    this.cards.calls.push(deckFromCache.calls[i]);
+                }
+            } else {
+                return api.deck(deckId).then(deck => {
+                    deck.populatedPromise.then(() => {
+                        this.cards.calls.push(deck.calls);
+                        for (let i = 0; i !== deck.calls.length; i++) {
+                            const call = deck.calls[i];
+                            let text = "";
+                            for (let j = 0; j !== call.text.length; j++) {
+                                text += call.text[j] + "{w}";
+                            }
+                            this.cards.calls.push(new Card(text, "call"));
                         }
-                        this.cards.calls.push(new Card(text, "call"));
-                    }
-
-                    for (let i = 0; i !== deck.responses.length; i++) {
-                        const response = deck.responses[i];
-                        this.cards.responses.push(new Card(response.text));
-                    }
+    
+                        for (let i = 0; i !== deck.responses.length; i++) {
+                            const response = deck.responses[i];
+                            this.cards.responses.push(new Card(response.text));
+                        }
+                    });
                 });
-            });
+            }
         }
     }
 
+    /**
+     * 
+     * @param {*} player 
+     * @return {boolean}
+     */
     addToGame(player) {
         this.players.push(player);
         player.currentGameUUID = this.id;
@@ -80,12 +97,18 @@ const Game = class {
     }
 
     giveCard(player) {
-        this.playerCardStacks[player].push(this.randomCard("response"));
+        if (this.playerCardStacks[player.uuid] === undefined)
+            this.playerCardStacks[player.uuid] = [];
+        const originalCard = this.randomCard("response");
+        delete this.cards.responses[originalCard];
+        const card = JSON.parse(JSON.stringify(originalCard));
+        card.uuid = v4();
+        this.playerCardStacks[player.uuid].push(card);
     }
 
     initGame() {
         for (let i = 0; i !== this.players.length; i++) {
-            const player = players[i];
+            const player = this.players[i];
             for (let j = 0; j !== GAME_CONFIG.CARDS_AT_START; j++) {
                 this.giveCard(player);
             }
@@ -94,9 +117,11 @@ const Game = class {
 
     nextRound() {
         const newCardJizzer = this.round === undefined || this.round.cardJizzer === undefined ? this.players[0] : this.players[this.players.indexOf(this.round.cardJizzer) == this.players.cardJizzer.length-1 ? 0 : this.players.indexOf(this.round.cardJizzer)];
-        this.round = new Round(newCardJizzer, this.randomCard("call"));
+        this.round = new Round(newCardJizzer, this.randomCard("call"), this.players.length);
+        this.currentRound += 1;
         if (this.currentRound === 1) {
             this.initGame();
+            return;
         }
         for (let i = 0; i !== this.players.length; i++) {
             const player = this.players[i];
@@ -104,6 +129,11 @@ const Game = class {
         }
     }
 
+    /**
+     * 
+     * @param {*} type 
+     * @return {Card}
+     */
     randomCard(type) {
         if (type === "call") {
             return this.cards.calls[Math.floor(Math.random() * Math.floor(this.cards.calls.length))];
@@ -111,14 +141,37 @@ const Game = class {
             return this.cards.responses[Math.floor(Math.random() * Math.floor(this.cards.responses.length))];
         }
     }
+    
+    /**
+     * @return {Card[]}
+     */
+    getCardsOfPlayer(player) {
+        return this.playerCardStacks[player.uuid];
+    }
 
 }
 exports.Game = Game;
 
 /**
  * 
+ * @param {*} deckId 
+ * @return {Card[]}
+ */
+function getDeckFromCache(deckId) {
+    const cCkeys = Object.keys(cardCache);
+    for (let j = 0; j !== cCkeys.length; j++) {
+        const cDeck = cardCache[cCkeys[j]];
+        if (deckId === cCKeys[j]) {
+            return cDeck;                
+        }
+    }
+}
+exports.getDeckFromCache = getDeckFromCache;
+
+/**
+ * 
  * @param {*} uuid
- * @returns Game 
+ * @return {Game}
  */
 function getGameByUUID(uuid) {
     for (let i = 0; i !== allGames.length; i++) {

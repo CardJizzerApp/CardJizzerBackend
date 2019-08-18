@@ -59,8 +59,38 @@ describe('commandTests', () => {
         });
         websocket.send("join " + gameUUID);
         player2.once("message", msg => {
-            assert("")
-        })
+            const errorCode = JSON.parse(msg).errorCode;
+            assert.equal(errorCode, 0);
+        });
+        player2.send("join " + gameUUID);
+    });
+    it("startGame", (done) => {
+        websocket.once("message", async(msg) => {
+            const errorCode = JSON.parse(msg).errorCode;
+            assert.equal(errorCode, 0);
+            done();
+        });
+        websocket.send("start");
+    });
+    let carduuid = undefined;
+    it("fetchCards", () => {
+        player2.once("message", msg => {
+            const response = JSON.parse(msg);
+            const errorCode = response.errorCode;
+            const cards = response.jsonData;
+            assert.equal(errorCode, 0);
+            assert.isAbove(cards.length, 1);
+            carduuid = cards[0].uuid;
+        });
+        player2.send("fetchcards");
+    });
+    it("playcard", (done) => {
+        player2.once("message", msg => {
+            const errorCode = JSON.parse(msg).errorCode;
+            assert.equal(errorCode, 0);
+            done();
+        }); 
+        player2.send("playcard " + carduuid);
     });
     after(() => {
         stopServer();

@@ -1,10 +1,7 @@
-const {getGameByUUID, GameState} = require("./game");
-
-
 const allUsers = [];
 exports.allUsers = allUsers;
 
-const player = class {
+exports.Player = class {
 
     constructor(websocket, username) {
         this.uuid = websocket.uuid;
@@ -18,24 +15,32 @@ const player = class {
         if (this.currentGameUUID === -1) {
             return false;
         }
+        const {getGameByUUID, GameState} = require("./game");
         const game = getGameByUUID(this.currentGameUUID);
         if (game === undefined || game.state !== GameState.INGAME) {
             return false;
         }
-        const hand = game.playerCardStacks[player];
+        const hand = game.getCardsOfPlayer(this);
         for (let i = 0; i !== hand.length; i++) {
             const card = hand[i];
             if (card.uuid === carduuid) {
-                console.log("Played");
+                if (game.round.playCard(this, card)) {
+                    game.playerCardStacks[this.uuid] = removeItem(game.playerCardStacks[this.uuid], i);
+                    return true;
+                }
             }
-            return false;
         }
+        return false;
     }
-
+    /**
+     * @return {boolean}
+     */
     join(gameUUID) {
         if (this.currentGameUUID !== -1) {
             return false;
         }
+        const {getGameByUUID} = require("./game");
+
         const game = getGameByUUID(gameUUID);
         for (let i = 0; i !== game.players.length; i++) {
             const player_i = game.players[i];
@@ -43,14 +48,17 @@ const player = class {
                 return false;
             }
         }
-
-        return game.addToGame(this);
+        game.addToGame(this);
+        return true;
     }
 
 }
-exports.Player = player;
+// exports.Player = player;
 
-exports.getPlayerByUUID = function(uuid) {
+/**
+ * @return {Player}
+ */
+const getPlayerByUUID = function(uuid) {
     for (let i = 0; i !== allUsers.length; i++) {
         const player = allUsers[i];
         const p_uuid = player.uuid;
@@ -60,3 +68,14 @@ exports.getPlayerByUUID = function(uuid) {
     }
     return undefined;
 }
+exports.getPlayerByUUID = getPlayerByUUID;
+
+const removeItem = function(arr, index) {
+    const newArr = []
+    for (let i = 0; i !== arr.length; i++) {
+        if (i === index) continue;
+        newArr.push(arr[i]);
+    }
+    return newArr;
+}
+exports.removeItem = removeItem;

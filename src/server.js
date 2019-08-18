@@ -21,18 +21,24 @@ websocketServer.on("connection", ws => {
         const args = message.split(" ");
         const command = findCommand(args[0]);
 
-        let response = ech.sendResponse(Responses.COMMAND_NOT_FOUND, null);        
-        
         if (command !== undefined) {
 
             if ((args.length - 1) !== command.argsLength) {
-                response = ech.sendResponse(Responses.INVALID_USAGE, null);
+                return ws.send(ech.sendResponse(Responses.INVALID_USAGE, null));
             } else {
-                response = command.run(args.slice(1), ws);
+                if (command.async === undefined || command.async === false) {
+                    return ws.send(command.run(args.slice(1), ws));
+                }
+                else {
+                    return command.run(args.slice(1), ws).then((response) => {
+                        return ws.send(response);
+                    });
+                }
             }
 
         }
-        ws.send(response);
+        return ws.send(ech.sendResponse(Responses.COMMAND_NOT_FOUND, null));
+
     })
 });
 
