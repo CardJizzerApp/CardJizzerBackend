@@ -1,6 +1,6 @@
 const assert = require("chai").assert;
 const ws = require("ws");
-const {stopServer} = require("./server");
+const { stopServer } = require("./server");
 
 describe('commandTests', () => {
     let websocket, player2;
@@ -12,7 +12,7 @@ describe('commandTests', () => {
     it("should return true", () => {
         return assert(true);
     });
-    it ("setUsername // login", () => {
+    it("setUsername // login", () => {
         websocket.once("message", msg => {
             const errorCode = JSON.parse(msg).errorCode;
             assert.equal(errorCode, 0);
@@ -24,14 +24,14 @@ describe('commandTests', () => {
         websocket.send("setusername test");
         player2.send("setusername test2");
     });
-    it ("fetchGames", () => {
+    it("fetchGames", () => {
         websocket.once("message", msg => {
             const errorCode = JSON.parse(msg).errorCode;
             assert.equal(errorCode, 0);
         });
         websocket.send("fetchgames");
     });
-    it ("createGame", () => {
+    it("createGame", () => {
         const maxPlayers = 4;
         websocket.once("message", msg => {
             const errorCode = JSON.parse(msg).errorCode;
@@ -65,7 +65,7 @@ describe('commandTests', () => {
         player2.send("join " + gameUUID);
     });
     it("startGame", (done) => {
-        websocket.once("message", async(msg) => {
+        websocket.once("message", async (msg) => {
             const errorCode = JSON.parse(msg).errorCode;
             assert.equal(errorCode, 0);
             done();
@@ -93,13 +93,14 @@ describe('commandTests', () => {
             const errorCode = JSON.parse(msg).errorCode;
             assert.equal(errorCode, 0);
             done();
-        }); 
+        });
         player2.send("playcard " + carduuid);
         player2.send("playcard " + carduuid2);
         player2.send("playcard " + carduuid3);
     });
     it("fetchallcards", (done) => {
         websocket.once("message", msg => {
+            console.log(JSON.parse(msg).jsonData);
             const errorCode = JSON.parse(msg).errorCode;
             assert.equal(errorCode, 0);
             done();

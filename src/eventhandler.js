@@ -1,6 +1,5 @@
-const {Player} = require("./player");
-const {ErrorCodeHelper, Responses} = require("./helper");
-const {getGameByUUID} = require("./game");
+const { Player } = require("./player");
+const { ErrorCodeHelper, Responses } = require("./helper");
 
 const ech = new ErrorCodeHelper();
 
@@ -13,17 +12,17 @@ const Event = class {
     }
 
     /**
-     * 
-     * @param {Player} player 
+     *
+     * @param {Player} player
      */
-    trigger(player) {}
-    
+    trigger(player) { }
+
 }
 
 const CardPlayedEvent = class extends Event {
 
     /**
-     * 
+     *
      * @param {Player} player
      */
     trigger(player) {
@@ -35,7 +34,7 @@ module.exports.CardPlayedEvent = CardPlayedEvent;
 const PlayerJoinedEvent = class extends Event {
 
     /**
-     * 
+     *
      * @param {Player} player
      */
     trigger(player) {
@@ -45,24 +44,24 @@ const PlayerJoinedEvent = class extends Event {
 module.exports.PlayerJoinedEvent = PlayerJoinedEvent;
 
 const CardJizzerPickedEvent = class extends Event {
-    
+
     /**
      *
-     * @param {Player} player 
+     * @param {Player} player
      */
     trigger(player) {
-        const game = getGameByUUID(player.currentGameUUID);
-        sendToAll(ech.sendResponse(Responses.CARDS_FLIPPED, game.round.allCards));
+        // const game = getGameByUUID(player.currentGameUUID);
+        sendToAll(ech.sendResponse(Responses.CARDS_FLIPPED, []));
     }
 }
 module.exports.CardJizzerPickedEvent = CardJizzerPickedEvent;
 
 
-const sendToAll = function(player, message) {
-    const game = getGameByUUID(player.currentGameUUID);
-    for (let i = 0; i !== game.players.length; i++) {
-        const playerI = game.players[i];
-        if (playerI === player) continue;
-        playerI.websocket.send(message);
-    }
+const sendToAll = function (player, message) {
+    // const game = getGameByUUID(player.currentGameUUID);
+    // for (let i = 0; i !== game.players.length; i++) {
+    //     const playerI = game.players[i];
+    //     if (playerI === player) continue;
+    //     playerI.websocket.send(message);
+    // }
 }

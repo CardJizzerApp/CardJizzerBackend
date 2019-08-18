@@ -1,18 +1,12 @@
 const ws = require("ws");
-const {v4} = require("uuid");
+const { v4 } = require("uuid");
 
-const {findCommand, registerCommands} = require("./command");
+const { findCommand, registerCommands } = require("./command");
 
-const {ErrorCodeHelper, Responses} = require("./helper");
+const { ErrorCodeHelper, Responses } = require("./helper");
 const ech = new ErrorCodeHelper();
 
-const websocketServer = new ws.Server({port: 83});
-
-require("./round");
-require("./eventhandler");
-require("./game");
-require("./player");
-require("./card");
+const websocketServer = new ws.Server({ port: 83 });
 
 registerCommands();
 
@@ -46,6 +40,6 @@ websocketServer.on("connection", ws => {
     })
 });
 
-module.exports.stopServer = function() {
-    websocketServer.close();    
+module.exports.stopServer = function () {
+    websocketServer.close();
 }
