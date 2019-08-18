@@ -4,9 +4,9 @@ const phaseState = {
     PlayCards: {name: "playCards", id: 1},
     SelectCard: {name: "selectCard", id: 2},
 };
-exports.phaseState = phaseState;
+module.exports.phaseState = phaseState;
 
-exports.Round = class {
+module.exports.Round = class {
     
     constructor(cardJizzer, blackCard, playerAmount) {
         this.allCards = {};
@@ -59,9 +59,9 @@ exports.Round = class {
     }
 
     hasEverybodyPicked() {
-        const shouldPicks = this.cardsAmount * this.playerAmount;
+        const shouldPicks = this.cardsAmount * (this.playerAmount - 1);
         let picks = 0;
-        for (let i = 0; i !== Object.keys(this.allCards).length; i++ ){
+        for (let i = 0; i !== Object.keys(this.allCards).length; i++) {
             const amountPlayer = this.allCards[Object.keys(this.allCards)[i]].length;
             picks += amountPlayer;
         }

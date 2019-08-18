@@ -1,6 +1,6 @@
-const Player = require("./player");
-const {getGameByUUID, Game} = require("./game");
+const {Player} = require("./player");
 const {ErrorCodeHelper, Responses} = require("./helper");
+const {getGameByUUID} = require("./game");
 
 const ech = new ErrorCodeHelper();
 
@@ -30,7 +30,7 @@ const CardPlayedEvent = class extends Event {
         sendToAll(ech.sendResponse(Responses.CARD_PLAYED, player.uuid));
     }
 }
-exports.CardPlayedEvent = CardPlayedEvent;
+module.exports.CardPlayedEvent = CardPlayedEvent;
 
 const PlayerJoinedEvent = class extends Event {
 
@@ -42,7 +42,7 @@ const PlayerJoinedEvent = class extends Event {
         sendToAll(ech.sendResponse(Responses.PLAYER_JOINED, player));
     }
 }
-exports.PlayerJoinedEvent = PlayerJoinedEvent;
+module.exports.PlayerJoinedEvent = PlayerJoinedEvent;
 
 const CardJizzerPickedEvent = class extends Event {
     
@@ -55,7 +55,7 @@ const CardJizzerPickedEvent = class extends Event {
         sendToAll(ech.sendResponse(Responses.CARDS_FLIPPED, game.round.allCards));
     }
 }
-exports.CardJizzerPickedEvent = CardJizzerPickedEvent;
+module.exports.CardJizzerPickedEvent = CardJizzerPickedEvent;
 
 
 const sendToAll = function(player, message) {

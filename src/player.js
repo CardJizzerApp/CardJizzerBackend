@@ -1,7 +1,9 @@
-const allUsers = [];
-exports.allUsers = allUsers;
+const {getGameByUUID, GameState} = require("./game");
 
-exports.Player = class {
+const allUsers = [];
+module.exports.allUsers = allUsers;
+
+const player = class {
 
     constructor(websocket, username) {
         this.uuid = websocket.uuid;
@@ -15,7 +17,6 @@ exports.Player = class {
         if (this.currentGameUUID === -1) {
             return false;
         }
-        const {getGameByUUID, GameState} = require("./game");
         const game = getGameByUUID(this.currentGameUUID);
         if (game === undefined || game.state !== GameState.INGAME) {
             return false;
@@ -39,8 +40,6 @@ exports.Player = class {
         if (this.currentGameUUID !== -1) {
             return false;
         }
-        const {getGameByUUID} = require("./game");
-
         const game = getGameByUUID(gameUUID);
         for (let i = 0; i !== game.players.length; i++) {
             const player_i = game.players[i];
@@ -53,7 +52,7 @@ exports.Player = class {
     }
 
 }
-// exports.Player = player;
+module.exports.Player = player;
 
 /**
  * @return {Player}
@@ -68,7 +67,7 @@ const getPlayerByUUID = function(uuid) {
     }
     return undefined;
 }
-exports.getPlayerByUUID = getPlayerByUUID;
+module.exports.getPlayerByUUID = getPlayerByUUID;
 
 const removeItem = function(arr, index) {
     const newArr = []
@@ -78,4 +77,4 @@ const removeItem = function(arr, index) {
     }
     return newArr;
 }
-exports.removeItem = removeItem;
+module.exports.removeItem = removeItem;

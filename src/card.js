@@ -1,6 +1,6 @@
 const {v4} = require("uuid");
 
-exports.Card = class {
+module.exports.Card = class {
 
     constructor(text, type) {
         this.uuid = v4();

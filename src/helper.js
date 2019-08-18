@@ -1,4 +1,4 @@
-exports.ErrorCodeHelper = class {
+module.exports.ErrorCodeHelper = class {
 
     sendResponse(response, jsonData) {
         return JSON.stringify({
@@ -10,7 +10,7 @@ exports.ErrorCodeHelper = class {
 }
 
 
-exports.Responses = {
+module.exports.Responses = {
     OK: {errorCode: 0, message: "OK"},
     COMMAND_NOT_FOUND: {errorCode: 1, message: "Command not found."},
     INVALID_USAGE: {errorCode: 2, message: "Invalid usage."},

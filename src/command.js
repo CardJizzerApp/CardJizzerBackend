@@ -1,14 +1,13 @@
 const {ErrorCodeHelper, Responses} = require("./helper");
-const {allGames, getGameByUUID, GameState, Game} = require("./game");
-const {Round, phaseState} = require("./round");
-
 const {getPlayerByUUID, Player, allUsers} = require("./player");
+const {allGames, getGameByUUID, GameState, Game} = require("./game");
+const {phaseState} = require("./round");
 
 const allCommands = [];
 
 const ech = new ErrorCodeHelper();
 
-exports.Command = class {
+module.exports.Command = class {
 
     constructor(commandname, argsLength, async) {
         this.commandname = commandname;
@@ -171,7 +170,7 @@ const playCard = class extends this.Command {
 
 const pickCard = class extends this.Command {
 
-    // selectcard [cardUUID: string]
+    // pickcard [cardUUID: string]
     constructor() {
         super("pickcard", 1);
     }
@@ -249,7 +248,7 @@ const fetchCards = class extends this.Command {
 const fetchAllPickedCards = class extends this.Command {
 
     constructor() {
-        super("fetchAllCards", 0);        
+        super("fetchallcards", 0);        
     }
 
     run(args, ws) {
@@ -273,7 +272,7 @@ const fetchAllPickedCards = class extends this.Command {
 
 }
 
-exports.registerCommands = function() {
+module.exports.registerCommands = function() {
     new createGame();
     new fetchGames();
     new setUsername();
@@ -287,7 +286,7 @@ exports.registerCommands = function() {
     new fetchAllPickedCards();
 }
 
-exports.findCommand = function(commandname) {
+module.exports.findCommand = function(commandname) {
     for (let i = 0; i !== allCommands.length; i++) {
         const command = allCommands[i];
         if (command.commandname === commandname) {

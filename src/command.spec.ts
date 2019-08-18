@@ -73,6 +73,8 @@ describe('commandTests', () => {
         websocket.send("start");
     });
     let carduuid = undefined;
+    let carduuid2 = undefined;
+    let carduuid3 = undefined;
     it("fetchCards", () => {
         player2.once("message", msg => {
             const response = JSON.parse(msg);
@@ -81,6 +83,8 @@ describe('commandTests', () => {
             assert.equal(errorCode, 0);
             assert.isAbove(cards.length, 1);
             carduuid = cards[0].uuid;
+            carduuid2 = cards[1].uuid;
+            carduuid3 = cards[2].uuid;
         });
         player2.send("fetchcards");
     });
@@ -91,6 +95,16 @@ describe('commandTests', () => {
             done();
         }); 
         player2.send("playcard " + carduuid);
+        player2.send("playcard " + carduuid2);
+        player2.send("playcard " + carduuid3);
+    });
+    it("fetchallcards", (done) => {
+        websocket.once("message", msg => {
+            const errorCode = JSON.parse(msg).errorCode;
+            assert.equal(errorCode, 0);
+            done();
+        });
+        websocket.send("fetchallcards");
     });
     after(() => {
         stopServer();

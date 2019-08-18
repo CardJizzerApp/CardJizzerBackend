@@ -6,9 +6,13 @@ const {findCommand, registerCommands} = require("./command");
 const {ErrorCodeHelper, Responses} = require("./helper");
 const ech = new ErrorCodeHelper();
 
-const {Game} = require("./game");
-
 const websocketServer = new ws.Server({port: 83});
+
+require("./round");
+require("./eventhandler");
+require("./game");
+require("./player");
+require("./card");
 
 registerCommands();
 
@@ -42,6 +46,6 @@ websocketServer.on("connection", ws => {
     })
 });
 
-exports.stopServer = function() {
+module.exports.stopServer = function() {
     websocketServer.close();    
 }

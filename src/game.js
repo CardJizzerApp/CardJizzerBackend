@@ -1,7 +1,7 @@
 const { v4 } = require("uuid");
+const { Round } = require("./round");
 const CardCastAPI = require("cardcast-api");
 const { Card } = require("./card");
-const { Round } = require("./round");
 const { GAME_CONFIG } = require("./config");
 
 
@@ -11,14 +11,14 @@ const cardCache = {};
 
 const allGames = [];
 
-exports.allGames = allGames;
+module.exports.allGames = allGames;
 
 const GameState = {
     INGAME: {joinable: false},
     STOPPED: {joinable: false},
     LOBBY: {joinable: true},
 }
-exports.GameState = GameState;
+module.exports.GameState = GameState;
 
 const Game = class {
 
@@ -150,7 +150,7 @@ const Game = class {
     }
 
 }
-exports.Game = Game;
+module.exports.Game = Game;
 
 /**
  * 
@@ -166,20 +166,19 @@ function getDeckFromCache(deckId) {
         }
     }
 }
-exports.getDeckFromCache = getDeckFromCache;
+module.exports.getDeckFromCache = getDeckFromCache;
 
 /**
  * 
  * @param {*} uuid
  * @return {Game}
  */
-function getGameByUUID(uuid) {
+const getGameByUUID = function(uuid) {
     for (let i = 0; i !== allGames.length; i++) {
         const game = allGames[i];
         if (game.id === uuid) {
             return game;
         }
     }
-    return undefined;
 }
-exports.getGameByUUID = getGameByUUID;
+module.exports.getGameByUUID = getGameByUUID;
