@@ -24,6 +24,7 @@ module.exports.Responses = {
     NOT_CARD_JIZZER: {errorCode: 10, message: "You are not card jizzer"},
     PLAYERS_NEED_TO_PICK_FIRST: {errorCode: 11, message: "Players need to pick first."},
     PICK_PHASE_OVER: {errorCode: 12, message: "Pick phase already over"},
+    CARD_COULD_NOT_BE_PICKED: {errorCode: 13, message: "Card could not be picked."},
     
     // Event Responses
     CARD_PLAYED: {errorCode: 101, message: "Player played card!"},

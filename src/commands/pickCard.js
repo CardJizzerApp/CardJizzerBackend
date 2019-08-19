@@ -5,15 +5,13 @@ const { ErrorCodeHelper, Responses } = require("../helper");
 const { getGameByUUID, GameState } = require("../game");
 const { getPlayerByUUID } = require("../player");
 
-const { RoundStoppedEvent } = require("../events/roundStoppedEvent");
-
 const ech = new ErrorCodeHelper();
 
 exports.pickCard = class extends Command {
 
     // pickcard [cardUUID: string]
     constructor() {
-        super("pickcard", 1);
+        super("pickcard", 1, false);
     }
 
     run(args, ws) {
@@ -33,15 +31,18 @@ exports.pickCard = class extends Command {
             return ech.sendResponse(Responses.NOT_CARD_JIZZER, null);
         }
         const keys = Object.keys(game.round.allCards);
-        for (let i = 0; i !== keys.length; i++) {
+        for (let i = 0; i !== keys.length ; i++) {
             const uuid = keys[i];
-            for (let j = 0; j !== keys[j].length; j++) {
+            for (let j = 0; j !== game.round.allCards[uuid].length ; j++) {
                 const card = game.round.allCards[keys[i]][j];
                 if (card.uuid === carduuid) {
                     game.nextRound(uuid);
-                    return true;
+                    // TODO: Round over event.
+                    return ech.sendResponse(Responses.OK, null);
                 }
             }
         }
+        return ech.sendResponse(Responses.CARD_COULD_NOT_BE_PICKED, null);
+
     }
 }

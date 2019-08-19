@@ -117,6 +117,7 @@ describe('commandTests', () => {
         });
         player2.send("pickcard aasdd");
         websocket.once("message", msg => {
+            console.log(msg);
             const errorCode = JSON.parse(msg).errorCode;
             assert.equal(errorCode, 0);
         });
