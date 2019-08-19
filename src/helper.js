@@ -30,4 +30,5 @@ module.exports.Responses = {
     CARDS_FLIPPED : {errorCode: 102, message: "Cards flipped!"},
     PLAYER_JOINED: {errorCode: 103, message: "Player joined!"},
     GAME_STARTED: {errorCode: 104, message: "Game started!"},
+    GAME_OVER: {errorCode: 105, message: "Game over!"},
 };

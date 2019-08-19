@@ -5,6 +5,8 @@ const { ErrorCodeHelper, Responses } = require("../helper");
 const { getGameByUUID, GameState } = require("../game");
 const { getPlayerByUUID } = require("../player");
 
+const { RoundStoppedEvent } = require("../events/roundStoppedEvent");
+
 const ech = new ErrorCodeHelper();
 
 exports.pickCard = class extends Command {
@@ -37,7 +39,6 @@ exports.pickCard = class extends Command {
                 const card = game.round.allCards[keys[i]][j];
                 if (card.uuid === carduuid) {
                     game.nextRound(uuid);
-                    // TODO: Round over event.
                     return true;
                 }
             }

@@ -22,6 +22,7 @@ const { pickCard } = require("./commands/pickCard");
 const { playCard } = require("./commands/playCard");
 const { setUsername } = require("./commands/setUsername");
 const { start } = require("./commands/start");
+const { fetchNames } = require("./commands/fetchNames");
 
 
 exports.registerCommands = function () {
@@ -35,6 +36,7 @@ exports.registerCommands = function () {
     new fetchCards();
     new pickCard();
     new fetchAllPickedCards();
+    new fetchNames();
 }
 
 exports.findCommand = function (commandname) {

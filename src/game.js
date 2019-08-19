@@ -124,6 +124,7 @@ const Game = class {
                 this.state = GameState.STOPPED;
                 setTimeout(deleteRoom, 20000);
                 // TODO: Event - GameStoppingSoon
+                new RoundStoppedEvent().trigger(game, this.players[uuid]);
                 return;
             }
         }

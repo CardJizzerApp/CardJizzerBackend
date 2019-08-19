@@ -120,9 +120,7 @@ describe('commandTests', () => {
             const errorCode = JSON.parse(msg).errorCode;
             assert.equal(errorCode, 0);
         });
-        console.log(cardToPick);
-        console.log(cardToPick.uuid);
-        websocket.send("pickcard asddf");
+        websocket.send("pickcard " + cardToPick.uuid);
     })
     after(() => {
         stopServer();
