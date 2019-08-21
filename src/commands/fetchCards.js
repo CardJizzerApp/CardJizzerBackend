@@ -1,18 +1,23 @@
-const { Command } = require("../command");
-const { getGameByUUID, GameState } = require("../game");
-const { getPlayerByUUID } = require("../player");
+const {Command} = require('../command');
+const {getGameByUUID, GameState} = require('../game');
+const {getPlayerByUUID} = require('../player');
 
-const { ErrorCodeHelper, Responses } = require("../helper");
+const {ErrorCodeHelper, Responses} = require('../helper');
 const ech = new ErrorCodeHelper();
 
 
-
 exports.fetchCards = class extends Command {
-
+    /**
+     * Fetch users' cards
+     */
     constructor() {
-        super("fetchcards", 0);
+        super('fetchcards', 0);
     }
-
+    /**
+     * @param {string[]} args
+     * @param {Websocket} ws
+     * @return {string}
+     */
     run(args, ws) {
         const player = getPlayerByUUID(ws.uuid);
         if (player === undefined) {
@@ -28,5 +33,4 @@ exports.fetchCards = class extends Command {
         const hand = game.getCardsOfPlayer(player);
         return ech.sendResponse(Responses.OK, hand);
     }
-
-}
+};

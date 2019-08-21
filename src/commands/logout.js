@@ -1,11 +1,17 @@
-const { Command } = require("../command");
+const {Command} = require('../command');
 
 exports.logout = class extends Command {
-
+    /**
+     * Logout command.
+     */
     constructor() {
-        super("logout", 0);
+        super('logout', 0);
     }
-
+    /**
+     * @param {string[]} args
+     * @param {Websocket} ws
+     * @return {string}
+     */
     run(args, ws) {
         for (let i = 0; i !== allUsers.length; i++) {
             const player = allUsers[i];
@@ -16,5 +22,4 @@ exports.logout = class extends Command {
         }
         return ech.sendResponse(Responses.NOT_LOGGED_IN, null);
     }
-
-}
+};

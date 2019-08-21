@@ -1,8 +1,10 @@
-const { v4 } = require("uuid");
-const { Round } = require("./round");
-const CardCastAPI = require("cardcast-api");
-const { Card } = require("./card");
-const { GAME_CONFIG } = require("./config");
+const {v4} = require('uuid');
+const {Round} = require('./round');
+const CardCastAPI = require('cardcast-api');
+const {Card} = require('./card');
+const {GAME_CONFIG} = require('./config');
+
+const {GameOverEvent} = require('./events/gameOverEvent');
 
 
 const api = new CardCastAPI.CardcastAPI();
@@ -14,14 +16,20 @@ const allGames = [];
 module.exports.allGames = allGames;
 
 const GameState = {
-    INGAME: { joinable: false },
-    STOPPED: { joinable: false },
-    LOBBY: { joinable: true },
-}
+    INGAME: {joinable: false},
+    STOPPED: {joinable: false},
+    LOBBY: {joinable: true},
+};
 module.exports.GameState = GameState;
 
 const Game = class {
-
+    /**
+     * @param {number} maxplayers
+     * @param {number[]} deckIds
+     * @param {string} password
+     * @param {number} pointsToWin
+     * @param {number} maxRoundTime
+     */
     constructor(maxplayers, deckIds, password, pointsToWin, maxRoundTime) {
         this.currentRound = 0;
         this.id = v4();
@@ -40,18 +48,24 @@ const Game = class {
         this.playerCardStacks = {};
         allGames.push(this);
     }
-
+    /**
+     * Starts the game.
+     */
     async start() {
         this.state = GameState.INGAME;
         return this.fetchDecks(this.deckIds).then(() => {
             this.nextRound();
         });
     }
-
+    /**
+     * Stops the game.
+     */
     stop() {
         this.state = GameState.LOBBY;
     }
-
+    /**
+     * @param {number[]} deckIds
+     */
     async fetchDecks(deckIds) {
         for (let i = 0; i !== deckIds.length; i++) {
             const deckId = deckIds[i];
@@ -64,16 +78,16 @@ const Game = class {
                     this.cards.calls.push(deckFromCache.calls[i]);
                 }
             } else {
-                return api.deck(deckId).then(deck => {
+                return api.deck(deckId).then((deck) => {
                     deck.populatedPromise.then(() => {
                         this.cards.calls.push(deck.calls);
                         for (let i = 0; i !== deck.calls.length; i++) {
                             const call = deck.calls[i];
-                            let text = "";
+                            let text = '';
                             for (let j = 0; j !== call.text.length; j++) {
-                                text += call.text[j] + "{w}";
+                                text += call.text[j] + '{w}';
                             }
-                            this.cards.calls.push(new Card(text, "call"));
+                            this.cards.calls.push(new Card(text, 'call'));
                         }
 
                         for (let i = 0; i !== deck.responses.length; i++) {
@@ -96,17 +110,22 @@ const Game = class {
         player.currentGameUUID = this.id;
         return true;
     }
-
+    /**
+     * @param {Player} player
+     */
     giveCard(player) {
-        if (this.playerCardStacks[player.uuid] === undefined)
+        if (this.playerCardStacks[player.uuid] === undefined) {
             this.playerCardStacks[player.uuid] = [];
-        const originalCard = this.randomCard("response");
+        }
+        const originalCard = this.randomCard('response');
         delete this.cards.responses[originalCard];
         const card = JSON.parse(JSON.stringify(originalCard));
         card.uuid = v4();
         this.playerCardStacks[player.uuid].push(card);
     }
-
+    /**
+     * Initializes game.
+     */
     initGame() {
         for (let i = 0; i !== this.players.length; i++) {
             const player = this.players[i];
@@ -116,25 +135,29 @@ const Game = class {
             }
         }
     }
-
-    nextRound(uuid) {
-        if (uuid !== undefined) {
-            this.scoreboard[uuid] = this.scoreboard += 1;
-            if (this.scoreboard[uuid] >= 8) {
+    /**
+     * @param {string} winneruuid
+     */
+    nextRound(winneruuid) {
+        if (winneruuid !== undefined) {
+            this.scoreboard[winneruuid] = this.scoreboard += 1;
+            if (this.scoreboard[winneruuid] >= 8) {
                 this.state = GameState.STOPPED;
                 setTimeout(deleteRoom, 20000);
-                // TODO: Event - GameStoppingSoon
-                new RoundStoppedEvent().trigger(game, this.players[uuid]);
+                new GameOverEvent().trigger(this, winneruuid);
                 return;
             }
         }
 
         let indexOfNewCardJizzer = 0;
 
-        if (this.round === undefined || this.round.cardJizzer === undefined) {
+        if (this.round === undefined ||
+            this.round.cardJizzer === undefined) {
             indexOfNewCardJizzer = 0;
         } else {
-            const indexOfCurrentCardJizzer = this.players.indexOf(this.round.cardJizzer);
+            const indexOfCurrentCardJizzer = this.players.indexOf(
+                this.round.cardJizzer
+            );
             indexOfNewCardJizzer = indexOfCurrentCardJizzer;
             if (indexOfCurrentCardJizzer + 1 >= this.players.length) {
                 indexOfNewCardJizzer = 0;
@@ -144,7 +167,8 @@ const Game = class {
         }
 
         const newCardJizzer = this.players[indexOfNewCardJizzer];
-        this.round = new Round(newCardJizzer, this.randomCard("call"), this.players.length);
+        this.round = new Round(newCardJizzer,
+            this.randomCard('call'), this.players.length);
         this.currentRound += 1;
         if (this.currentRound === 1) {
             this.initGame();
@@ -162,25 +186,39 @@ const Game = class {
      * @return {Card}
      */
     randomCard(type) {
-        if (type === "call") {
-            return this.cards.calls[Math.floor(Math.random() * Math.floor(this.cards.calls.length))];
+        if (type === 'call') {
+            return this.cards.calls[
+                Math.floor(Math.random()
+                *
+                Math.floor(this.cards.calls.length))
+            ];
         } else {
-            return this.cards.responses[Math.floor(Math.random() * Math.floor(this.cards.responses.length))];
+            return this.cards.responses[
+                Math.floor(Math.random()
+                *
+                Math.floor(this.cards.responses.length))
+            ];
         }
     }
 
     /**
+     * @param {Player} player
      * @return {Card[]}
      */
     getCardsOfPlayer(player) {
         return this.playerCardStacks[player.uuid];
     }
-
+    /**
+     * Deletes the game.
+     */
     deleteRoom() {
+        for (let i = 0; i !== this.players.length; i++) {
+            const player = this.players[i];
+            player.currentGameUUID = -1;
+        }
         delete allGames[this];
     }
-
-}
+};
 module.exports.Game = Game;
 
 /**
@@ -196,7 +234,7 @@ function getDeckFromCache(deckId) {
             return cDeck;
         }
     }
-}
+};
 module.exports.getDeckFromCache = getDeckFromCache;
 
 /**
@@ -204,12 +242,12 @@ module.exports.getDeckFromCache = getDeckFromCache;
  * @param {*} uuid
  * @return {Game}
  */
-const getGameByUUID = function (uuid) {
+const getGameByUUID = function(uuid) {
     for (let i = 0; i !== allGames.length; i++) {
         const game = allGames[i];
         if (game.id === uuid) {
             return game;
         }
     }
-}
+};
 module.exports.getGameByUUID = getGameByUUID;

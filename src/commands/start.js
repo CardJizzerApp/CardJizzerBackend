@@ -1,16 +1,21 @@
-const { Command } = require("../command");
-const { getGameByUUID, GameState } = require("../game");
-const { getPlayerByUUID } = require("../player");
+const {Command} = require('../command');
+const {getGameByUUID, GameState} = require('../game');
+const {getPlayerByUUID} = require('../player');
 
-const { ErrorCodeHelper, Responses } = require("../helper");
+const {ErrorCodeHelper, Responses} = require('../helper');
 const ech = new ErrorCodeHelper();
 
 exports.start = class extends Command {
-
+    /**
+     * Start command for starting a game.
+     */
     constructor() {
-        super("start", 0, true);
+        super('start', 0, true);
     }
-
+    /**
+     * @param {string[]} args
+     * @param {Websocket} ws
+     */
     async run(args, ws) {
         const player = getPlayerByUUID(ws.uuid);
         if (player === undefined) {
@@ -27,5 +32,4 @@ exports.start = class extends Command {
             return ech.sendResponse(Responses.OK, game);
         });
     }
-
-}
+};

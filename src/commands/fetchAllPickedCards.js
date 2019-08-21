@@ -1,17 +1,23 @@
-const { Command } = require("../command");
-const { phaseState } = require("../round");
-const { getGameByUUID, GameState } = require("../game");
-const { getPlayerByUUID } = require("../player");
+const {Command} = require('../command');
+const {phaseState} = require('../round');
+const {getGameByUUID, GameState} = require('../game');
+const {getPlayerByUUID} = require('../player');
 
-const { ErrorCodeHelper, Responses } = require("../helper");
+const {ErrorCodeHelper, Responses} = require('../helper');
 const ech = new ErrorCodeHelper();
 
 exports.fetchAllPickedCards = class extends Command {
-
+    /**
+     * Fetch all laid down cards.
+     */
     constructor() {
-        super("fetchallcards", 0);
+        super('fetchallcards', 0);
     }
-
+    /**
+     * @param {string[]} args
+     * @param {Websocket} ws
+     * @return {string}
+     */
     run(args, ws) {
         const player = getPlayerByUUID(ws.uuid);
         if (player === undefined) {
@@ -30,5 +36,4 @@ exports.fetchAllPickedCards = class extends Command {
         }
         return ech.sendResponse(Responses.OK, game.round.allCards);
     }
-
-}
+};

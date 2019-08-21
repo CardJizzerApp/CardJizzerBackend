@@ -1,17 +1,22 @@
-const { Command } = require("../command");
-const { getGameByUUID, GameState } = require("../game");
-const { getPlayerByUUID } = require("../player");
+const {Command} = require('../command');
+const {getGameByUUID, GameState} = require('../game');
+const {getPlayerByUUID} = require('../player');
 
-const { ErrorCodeHelper, Responses } = require("../helper");
+const {ErrorCodeHelper, Responses} = require('../helper');
 const ech = new ErrorCodeHelper();
 
 exports.join = class extends Command {
-
-    // join [gameUUID: string]
+    /**
+     * join [gameUUID: UUID / string]
+     */
     constructor() {
-        super("join", 1);
+        super('join', 1);
     }
-
+    /**
+     * @param {string[]} args
+     * @param {Websocket} ws
+     * @return {string}
+     */
     run(args, ws) {
         const gameUUID = args[0];
         const player = getPlayerByUUID(ws.uuid);
@@ -23,13 +28,11 @@ exports.join = class extends Command {
             return ech.sendResponse(Responses.GAME_NOT_FOUND, null);
         }
         if (game.state === GameState.INGAME) {
-            return ech.sendResponse(Responses.NOT_INGAME, null)
+            return ech.sendResponse(Responses.NOT_INGAME, null);
         }
         if (player.join(game.id)) {
             return ech.sendResponse(Responses.OK, null);
         }
         return ech.sendResponse(Responses.COULD_NOT_JOIN, null);
-
     }
-
-}
+};

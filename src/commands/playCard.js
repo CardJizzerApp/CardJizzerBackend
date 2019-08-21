@@ -1,19 +1,24 @@
-const { Command } = require("../command");
-const { getGameByUUID, GameState } = require("../game");
-const { getPlayerByUUID } = require("../player");
-const { phaseState } = require("../round");
+const {Command} = require('../command');
+const {getGameByUUID, GameState} = require('../game');
+const {getPlayerByUUID} = require('../player');
+const {phaseState} = require('../round');
 
-const { ErrorCodeHelper, Responses } = require("../helper");
+const {ErrorCodeHelper, Responses} = require('../helper');
 const ech = new ErrorCodeHelper();
 
 
 exports.playCard = class extends Command {
-
-    // playcard [cardUUID: string]
+    /**
+     * playcard [cardUUID: string]
+     */
     constructor() {
-        super("playcard", 1);
+        super('playcard', 1);
     }
-
+    /**
+     * @param {string[]} args
+     * @param {Websocket} ws
+     * @return {string}
+     */
     run(args, ws) {
         const cardUUID = args[0];
         const player = getPlayerByUUID(ws.uuid);
@@ -33,5 +38,4 @@ exports.playCard = class extends Command {
         }
         return ech.sendResponse(Responses.CARD_COULD_NOT_BE_PLAYED, null);
     }
-
-}
+};

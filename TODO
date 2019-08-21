@@ -1,3 +1,4 @@
 Version 0.0.3
 - [] Add events
+- [] Upgrade fetch cards command so users can see all cards upon Cardjizzers pick.
 - [] Command cooldown

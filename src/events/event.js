@@ -1,11 +1,6 @@
 exports.Event = class {
-
-    constructor() {
-
-    }
-
-    trigger() {
-
-    }
-
-}
+    /**
+     * abstract function
+     */
+    trigger() {}
+};

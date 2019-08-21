@@ -1,17 +1,22 @@
-const {Command} = require("../command");
-const {getPlayerByUUID} = require("../player");
-const {getGameByUUID} = require("../game");
-const { ErrorCodeHelper, Responses } = require("../helper");
+const {Command} = require('../command');
+const {getPlayerByUUID} = require('../player');
+const {getGameByUUID} = require('../game');
+const {ErrorCodeHelper, Responses} = require('../helper');
 
 const ech = new ErrorCodeHelper();
 
 exports.fetchNames = class extends Command {
-
-
+    /**
+     * Fetch names of all players in current game.
+     */
     constructor() {
-        super("fetchnames", 0);
+        super('fetchnames', 0);
     }
-
+    /**
+     * @param {string[]} args
+     * @param {Websocket} ws
+     * @return {string}
+     */
     run(args, ws) {
         const player = getPlayerByUUID(ws.uuid);
         if (player === undefined) {
@@ -28,5 +33,4 @@ exports.fetchNames = class extends Command {
         }
         return ech.sendResponse(Responses.OK, usernames);
     }
-
-}
+};
