@@ -7,23 +7,22 @@ import os
 def createEvent(event_name):
     event_name_capitalized = event_name.capitalize()
     event_template = """
-const {Event} = require("./event");
-const {Game} = require("../game");
-const {ErrorCodeHelper, Responses} = require("../helper");
+const {Event} = require('./event');
+const {Game} = require('../game');
+const {ErrorCodeHelper, Responses} = require('../helper');
 
 const ech = new ErrorCodeHelper();
 
 exports.EVN = class extends Event {
 
     /**
-     * 
      * @param {Game} game 
      */
     trigger(game) {
         for (let i = 0; i !== game.players.length; i++) {
             const player = game.players[i];
             const websocket = player.websocket;
-            websocket.send(ech.sendResponse(Responses.CARD_RECEIVED, null));
+            websocket.send(ech.sendResponse(Responses.RESPONSE_HERE, null));
         }
     }
 
