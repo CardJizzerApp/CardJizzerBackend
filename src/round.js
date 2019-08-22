@@ -1,5 +1,3 @@
-const {CardJizzerPickedEvent} = require('./events/cardJizzerPickedEvent');
-
 const phaseState = {
     PlayCards: {name: 'playCards', id: 1},
     SelectCard: {name: 'selectCard', id: 2},
@@ -47,7 +45,6 @@ module.exports.Round = class {
         this.allCards[playerUUID].push(card);
         if (this.hasEverybodyPicked()) {
             this.phase = phaseState.SelectCard;
-            new CardJizzerPickedEvent().trigger(this.cardJizzer);
         }
         return true;
     }

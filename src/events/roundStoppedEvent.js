@@ -12,7 +12,8 @@ exports.RoundStoppedEvent = class extends Event {
         for (let i = 0; i !== game.players.length; i++) {
             const player = game.players[i];
             player.websocket.send(
-                ech.sendResponse(Responses.GAME_OVER, {winner: winner.uuid})
+                ech.sendResponse(Responses.CARD_JIZZER_PICKED,
+                {winner: winner.uuid})
             );
         }
     }

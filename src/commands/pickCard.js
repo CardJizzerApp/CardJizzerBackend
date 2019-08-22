@@ -39,13 +39,18 @@ exports.pickCard = class extends Command {
         }
         const keys = Object.keys(game.round.allCards);
         for (let i = 0; i !== keys.length; i++) {
-            const uuid = keys[i];
-            for (let j = 0; j !== game.round.allCards[uuid].length; j++) {
-                const card = game.round.allCards[keys[i]][j];
+            const playerUUID = keys[i];
+            for (let j = 0; j !== game.round.allCards[playerUUID].length; j++) {
+                const card = game.round.allCards[playerUUID][j];
                 if (card.uuid === carduuid) {
-                    new RoundStoppedEvent().trigger(game, game.players[uuid]);
-                    game.nextRound(uuid);
-                    return ech.sendResponse(Responses.OK, null);
+                    for (let x = 0; x !== game.players.length; x++) {
+                        if (game.players[x].uuid === playerUUID) {
+                            new RoundStoppedEvent().trigger(game,
+                                game.players[x]);
+                            game.nextRound(playerUUID);
+                            return ech.sendResponse(Responses.OK, null);
+                        }
+                    }
                 }
             }
         }

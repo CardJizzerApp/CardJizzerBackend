@@ -53,9 +53,40 @@ const Game = class {
      */
     async start() {
         this.state = GameState.INGAME;
-        return this.fetchDecks(this.deckIds).then(() => {
-            this.nextRound();
-        });
+        this.mockDecks();
+        this.nextRound();
+        // return this.fetchDecks(this.deckIds).then(() => {
+        //     this.nextRound();
+        // });
+    }
+    /**
+     * Mock decks
+     */
+    mockDecks() {
+        this.cards.calls = [
+            {text: 'Mein Dad... {w}', uuid: v4()},
+            {text: 'Mein Dad... {w}', uuid: v4()},
+            {text: 'Mein Dad... {w}', uuid: v4()},
+            {text: 'Mein Dad... {w}', uuid: v4()},
+            {text: 'Mein Dad... {w}', uuid: v4()},
+        ];
+        this.cards.responses = [
+            {text: 'Testkarte', uuid: v4()},
+            {text: 'Testkarte', uuid: v4()},
+            {text: 'Testkarte', uuid: v4()},
+            {text: 'Testkarte', uuid: v4()},
+            {text: 'Testkarte', uuid: v4()},
+            {text: 'Testkarte', uuid: v4()},
+            {text: 'Testkarte', uuid: v4()},
+            {text: 'Testkarte', uuid: v4()},
+            {text: 'Testkarte', uuid: v4()},
+            {text: 'Testkarte', uuid: v4()},
+            {text: 'Testkarte', uuid: v4()},
+            {text: 'Testkarte', uuid: v4()},
+            {text: 'Testkarte', uuid: v4()},
+            {text: 'Testkarte', uuid: v4()},
+            {text: 'Testkarte', uuid: v4()},
+        ];
     }
     /**
      * Stops the game.
