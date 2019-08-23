@@ -16,6 +16,7 @@
     },
     "rules": {
         "linebreak-style": 0,
-        "indent": "off"
+        "indent": ["error", 4],
+        "semi": ["error", "always"]
     }
 }

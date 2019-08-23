@@ -1,4 +1,6 @@
-const assert = require("chai").assert;
+const ChaiS = require("chai");
+const assert = ChaiS.assert;
+const expect = ChaiS.expect;
 const ws = require("ws");
 const { stopServer } = require("./server");
 
@@ -9,7 +11,7 @@ describe('commandTests', () => {
         websocket = new ws("ws://localhost:83");
         player2 = new ws("ws://localhost:83");
         done();
-    })
+    });
     it("should return true", () => {
         return assert(true);
     });
@@ -56,9 +58,10 @@ describe('commandTests', () => {
     it("joinGame", () => {
         websocket.once("message", msg => {
             const errorCode = JSON.parse(msg).errorCode;
-            assert.equal(errorCode, 7);
+            expect(errorCode).to.be.oneOf([7, 113]);
         });
         websocket.send("join " + gameUUID);
+
         player2.once("message", msg => {
             const errorCode = JSON.parse(msg).errorCode;
             assert.equal(errorCode, 0);
@@ -110,7 +113,7 @@ describe('commandTests', () => {
         });
         websocket.send("fetchallcards");
     });
-    it("pickcard", (done) => {
+    it("pickcard", () => {
         player2.once("message", msg => {
             const errorCode = JSON.parse(msg).errorCode;
             assert.equal(errorCode, 10);
@@ -119,16 +122,10 @@ describe('commandTests', () => {
         websocket.on("message", msg => {
             const response = JSON.parse(msg);
             const errorCode = response.errorCode;
-            if (errorCode === 102) {
-                assert(true);
-            }
-            if (errorCode === 0) {
-                assert(true);
-                done();
-            }
+            expect(errorCode).to.be.oneOf([102, 0]);
         });
         websocket.send("pickcard " + cardToPick.uuid);
-    })
+    });
     after(() => {
         stopServer();
     });

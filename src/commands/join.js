@@ -2,6 +2,8 @@ const {Command} = require('../command');
 const {getGameByUUID, GameState} = require('../game');
 const {getPlayerByUUID} = require('../player');
 
+const {PlayerJoinedEvent} = require('../events/playerJoinedEvent');
+
 const {ErrorCodeHelper, Responses} = require('../helper');
 const ech = new ErrorCodeHelper();
 
@@ -31,6 +33,7 @@ exports.join = class extends Command {
             return ech.sendResponse(Responses.NOT_INGAME, null);
         }
         if (player.join(game.id)) {
+            new PlayerJoinedEvent().trigger(game, player);
             return ech.sendResponse(Responses.OK, null);
         }
         return ech.sendResponse(Responses.COULD_NOT_JOIN, null);
