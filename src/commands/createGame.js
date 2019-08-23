@@ -13,7 +13,7 @@ class CreateGame extends Command {
      * Creating game.
      */
     constructor() {
-        super('creategame', 4, false);
+        super('creategame', 5, false);
     }
     /**
      * @param {string[]} args
@@ -31,12 +31,14 @@ class CreateGame extends Command {
         // const passwordRequired = password !== 'false';
         const pointsToWin = args[3];
         const maxRoundTime = args[4];
+        const gameTitle = args[5];
         const game = new Game(
             maxPlayers,
             ['SFG96'],
             password,
             pointsToWin,
-            maxRoundTime
+            maxRoundTime,
+            gameTitle
         );
         player.join(game.id);
         return ech.sendResponse(Responses.OK, game);

@@ -1,4 +1,7 @@
 Version 0.0.3
-- [] Add events
-- [] Upgrade fetch cards command so users can see all cards upon Cardjizzers pick.
+- [X] Add events
+- [X] Upgrade fetch cards command so users can see all cards upon Cardjizzers pick.
 - [] Command cooldown
+
+Version 0.0.4
+- [X] Give each gameroom a title

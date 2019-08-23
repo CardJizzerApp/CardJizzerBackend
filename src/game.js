@@ -29,8 +29,10 @@ const Game = class {
      * @param {string} password
      * @param {number} pointsToWin
      * @param {number} maxRoundTime
+     * @param {string} title
      */
-    constructor(maxplayers, deckIds, password, pointsToWin, maxRoundTime) {
+    constructor(maxplayers, deckIds, password, pointsToWin,
+        maxRoundTime, title) {
         this.currentRound = 0;
         this.id = v4();
         this.maxplayers = maxplayers;
@@ -40,6 +42,7 @@ const Game = class {
         this.maxRoundTime = maxRoundTime;
         this.state = GameState.LOBBY;
         this.players = [];
+        this.title = title || v4();
         this.cards = {
             calls: [],
             responses: [],
@@ -219,14 +222,14 @@ const Game = class {
         if (type === 'call') {
             return this.cards.calls[
                 Math.floor(Math.random()
-                *
-                Math.floor(this.cards.calls.length))
+                    *
+                    Math.floor(this.cards.calls.length))
             ];
         } else {
             return this.cards.responses[
                 Math.floor(Math.random()
-                *
-                Math.floor(this.cards.responses.length))
+                    *
+                    Math.floor(this.cards.responses.length))
             ];
         }
     }

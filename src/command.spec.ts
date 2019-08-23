@@ -42,7 +42,7 @@ describe('commandTests', () => {
             assert.equal(errorCode, 0);
             assert.equal(maxPlayersJson, maxPlayers);
         });
-        websocket.send("creategame " + maxPlayers + " 0 false 20");
+        websocket.send("creategame " + maxPlayers + " 0 false 20 SomeTitle");
     });
     let gameUUID;
     it("fetchGames after creation", () => {
