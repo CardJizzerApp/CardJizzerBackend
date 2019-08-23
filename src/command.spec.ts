@@ -95,7 +95,7 @@ describe('commandTests', () => {
     it("playcard", (done) => {
         player2.once("message", msg => {
             const errorCode = JSON.parse(msg).errorCode;
-            assert.equal(errorCode, 0);
+            expect(errorCode).to.be.oneOf([101, 0, 107]);
             done();
         });
         player2.send("playcard " + carduuid);
@@ -103,13 +103,12 @@ describe('commandTests', () => {
         player2.send("playcard " + carduuid3);
     });
     let cardToPick = undefined;
-    it("fetchallcards", (done) => {
+    it("fetchallcards", () => {
         websocket.once("message", msg => {
             const errorCode = JSON.parse(msg).errorCode;
             assert.equal(errorCode, 0);
             const jsonData = JSON.parse(msg).jsonData;
             cardToPick = jsonData[Object.keys(jsonData)[0]][0];
-            done();
         });
         websocket.send("fetchallcards");
     });

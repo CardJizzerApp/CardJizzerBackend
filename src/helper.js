@@ -34,9 +34,10 @@ module.exports.Responses = {
     {errorCode: 13, message: 'Card could not be picked.'},
     // Event Responses
     CARD_PLAYED: {errorCode: 101, message: 'Player played card!'},
-    CARD_JIZZER_PICKED: {errorCode: 102, message: 'Cards flipped!'},
+    CARD_JIZZER_PICKED: {errorCode: 102, message: 'Cardjizzer picked!'},
     PLAYER_JOINED: {errorCode: 103, message: 'Player joined!'},
     GAME_STARTED: {errorCode: 104, message: 'Game started!'},
     GAME_OVER: {errorCode: 105, message: 'Game over!'},
     NEW_ROUND_STARTED: {errorCode: 106, message: 'New round has started!'},
+    CARDS_FLIPPED: {errorCode: 107, message: 'Cards flipped!'},
 };

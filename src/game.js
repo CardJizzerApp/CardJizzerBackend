@@ -179,7 +179,6 @@ const Game = class {
                 return;
             }
         }
-
         let indexOfNewCardJizzer = 0;
 
         if (this.round === undefined ||
@@ -270,7 +269,7 @@ module.exports.getDeckFromCache = getDeckFromCache;
 
 /**
  *
- * @param {*} uuid
+ * @param {string} uuid
  * @return {Game}
  */
 const getGameByUUID = function(uuid) {
