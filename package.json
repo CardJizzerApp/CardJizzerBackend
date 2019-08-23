@@ -1,6 +1,6 @@
 {
   "name": "cah-backend",
-  "version": "0.0.2",
+  "version": "0.0.4",
   "description": "Backend for CAH.",
   "main": "index.js",
   "scripts": {
