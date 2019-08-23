@@ -7,8 +7,7 @@ WORKDIR /var/server
 ARG WS_PORT=80
 
 RUN npm i
-
-RUN npm run prod
+RUN npm build
 
 ENTRYPOINT [ "node", "./dist/server.js" ]
 
