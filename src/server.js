@@ -6,7 +6,9 @@ const {findCommand, registerCommands} = require('./command');
 const {ErrorCodeHelper, Responses} = require('./helper');
 const ech = new ErrorCodeHelper();
 
-const websocketServer = new ws.Server({port: 83});
+const PORT = process.env.WS_PORT || 80;
+
+const websocketServer = new ws.Server({port: PORT});
 
 registerCommands();
 
@@ -38,3 +40,5 @@ websocketServer.on('connection', (ws) => {
 module.exports.stopServer = function() {
     websocketServer.close();
 };
+module.exports.port = PORT;
+

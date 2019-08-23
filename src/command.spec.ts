@@ -2,14 +2,14 @@ const ChaiS = require("chai");
 const assert = ChaiS.assert;
 const expect = ChaiS.expect;
 const ws = require("ws");
-const { stopServer } = require("./server");
+const { stopServer, port } = require("./server");
 
 describe('commandTests', () => {
     let websocket, player2;
     before((done) => {
         require("./server");
-        websocket = new ws("ws://localhost:83");
-        player2 = new ws("ws://localhost:83");
+        websocket = new ws("ws://localhost:" + port);
+        player2 = new ws("ws://localhost:" + port);
         done();
     });
     it("should return true", () => {
