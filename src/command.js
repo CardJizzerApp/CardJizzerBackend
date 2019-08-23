@@ -20,7 +20,7 @@ exports.Command = class {
 };
 
 const {createGame} = require('./commands/createGame');
-const {fetchAllPickedCards} = require('./commands/fetchAllPickedCards');
+const {fetchAllPlayedCards} = require('./commands/fetchAllPlayedCards');
 const {fetchCards} = require('./commands/fetchCards');
 const {fetchGames} = require('./commands/fetchGames');
 const {join} = require('./commands/join');
@@ -43,7 +43,7 @@ exports.registerCommands = function() {
     new start();
     new fetchCards();
     new pickCard();
-    new fetchAllPickedCards();
+    new fetchAllPlayedCards();
     new fetchNames();
     /* eslint-enable */
 };

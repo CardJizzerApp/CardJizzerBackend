@@ -6,7 +6,7 @@ const {getPlayerByUUID} = require('../player');
 const {ErrorCodeHelper, Responses} = require('../helper');
 const ech = new ErrorCodeHelper();
 
-exports.fetchAllPickedCards = class extends Command {
+exports.fetchAllPlayedCards = class extends Command {
     /**
      * Fetch all laid down cards.
      */
@@ -32,8 +32,8 @@ exports.fetchAllPickedCards = class extends Command {
         }
         const round = game.round;
         if (round.phase === phaseState.PlayCards) {
-            return ech.sendResponse(Responses.PLAYERS_NEED_TO_PICK_FIRST, null);
+            return ech.sendResponse(Responses.OK, Object.keys(round.allCards));
         }
-        return ech.sendResponse(Responses.OK, game.round.allCards);
+        return ech.sendResponse(Responses.OK, round.allCards);
     }
 };
