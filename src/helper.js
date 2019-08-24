@@ -28,16 +28,16 @@ module.exports.Responses = {
         {errorCode: 9, message: 'Card could not be found!'},
     NOT_CARD_JIZZER: {errorCode: 10, message: 'You are not card jizzer'},
     PLAYERS_NEED_TO_PICK_FIRST:
-    {errorCode: 11, message: 'Players need to pick first.'},
+        {errorCode: 11, message: 'Players need to pick first.'},
     PICK_PHASE_OVER: {errorCode: 12, message: 'Pick phase already over'},
     CARD_COULD_NOT_BE_PICKED:
-    {errorCode: 13, message: 'Card could not be picked.'},
+        {errorCode: 13, message: 'Card could not be picked.'},
     // Event Responses
-    CARD_PLAYED: {errorCode: 101, message: 'Player played card!'},
-    CARD_JIZZER_PICKED: {errorCode: 102, message: 'Cardjizzer picked!'},
-    PLAYER_JOINED: {errorCode: 103, message: 'Player joined!'},
-    GAME_STARTED: {errorCode: 104, message: 'Game started!'},
-    GAME_OVER: {errorCode: 105, message: 'Game over!'},
-    NEW_ROUND_STARTED: {errorCode: 106, message: 'New round has started!'},
-    CARDS_FLIPPED: {errorCode: 107, message: 'Cards flipped!'},
+    CARD_PLAYED: {errorCode: 1000101, message: 'Player played card!'},
+    CARD_JIZZER_PICKED: {errorCode: 1000102, message: 'Cardjizzer picked!'},
+    PLAYER_JOINED: {errorCode: 1000103, message: 'Player joined!'},
+    GAME_STARTED: {errorCode: 1000104, message: 'Game started!'},
+    GAME_OVER: {errorCode: 1000105, message: 'Game over!'},
+    NEW_ROUND_STARTED: {errorCode: 1000106, message: 'New round has started!'},
+    CARDS_FLIPPED: {errorCode: 1000107, message: 'Cards flipped!'},
 };
