@@ -41,7 +41,9 @@ class CreateGame extends Command {
             gameTitle
         );
         player.join(game.id);
-        return ech.sendResponse(Responses.OK, game);
+        return ech.sendResponse(Responses.OK, {
+            maxplayers: Number.parseInt(maxPlayers),
+        });
     }
 }
 

@@ -17,18 +17,24 @@ registerCommands();
 websocketServer.on('connection', (ws) => {
     ws.uuid = v4();
     ws.on('message', (message) => {
+        const commandId = message.split(';').length > 1 ?
+            message.split(';')[0] + ';'
+            : '';
         const args = message.split(' ');
-        const command = findCommand(args[0]);
+        const commandName = commandId === '' ? args[0] : args[0].split(';')[1];
+        const command = findCommand(commandName);
 
         if (command !== undefined) {
             if ((args.length - 1) !== command.argsLength) {
-                return ws.send(ech.sendResponse(Responses.INVALID_USAGE, null));
+                return ws.send(commandId +
+                    ech.sendResponse(Responses.INVALID_USAGE, null));
             } else {
                 if (command.async === undefined || command.async === false) {
-                    return ws.send(command.run(args.slice(1), ws));
+                    return ws.send(commandId +
+                        command.run(args.slice(1), ws));
                 } else {
                     return command.run(args.slice(1), ws).then((response) => {
-                        return ws.send(response);
+                        return ws.send(commandId + response);
                     });
                 }
             }
