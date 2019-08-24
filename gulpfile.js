@@ -16,7 +16,6 @@ function cleanDist(cb) {
  */
 function defaultTask(cb) {
     gulp.src(['src/**/*.js'])
-        .pipe(minify({noSource: true}))
         .pipe(gulp.dest('dist'));
     cb();
 }
