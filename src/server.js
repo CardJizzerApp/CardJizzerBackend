@@ -1,14 +1,17 @@
+const https = require('https');
 const ws = require('ws');
 const {v4} = require('uuid');
+const fs = require('fs');
 
 const {findCommand, registerCommands} = require('./command');
 
 const {ErrorCodeHelper, Responses} = require('./helper');
 const ech = new ErrorCodeHelper();
 
-const PORT = process.env.WS_PORT || 80;
-
-const websocketServer = new ws.Server({port: PORT});
+const PORT = process.env.WS_PORT || 443;
+console.log(PORT);
+const sslServer = https.createServer({key: fs.readFileSync(__dirname + '/ssl/priv.pem', 'utf-8'), cert: fs.readFileSync(__dirname + '/ssl/fullchain.pem', 'utf-8')})
+const websocketServer = new ws.Server({port: PORT, server: sslServer});
 
 registerCommands();
 
