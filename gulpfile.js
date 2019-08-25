@@ -15,7 +15,7 @@ function cleanDist(cb) {
  * Minifying js code.
  */
 function defaultTask(cb) {
-    gulp.src(['src/**/*.js'])
+    gulp.src(['src/**/*'])
         .pipe(gulp.dest('dist'));
     cb();
 }

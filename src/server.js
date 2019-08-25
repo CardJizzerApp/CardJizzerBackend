@@ -10,7 +10,10 @@ const ech = new ErrorCodeHelper();
 
 const PORT = process.env.WS_PORT || 443;
 console.log(PORT);
-const sslServer = https.createServer({key: fs.readFileSync(__dirname + '/ssl/priv.pem', 'utf-8'), cert: fs.readFileSync(__dirname + '/ssl/fullchain.pem', 'utf-8')})
+const sslServer = https.createServer({
+    key: fs.readFileSync(__dirname + '/ssl/priv.pem', 'utf-8'),
+    cert: fs.readFileSync(__dirname + '/ssl/fullchain.pem', 'utf-8'),
+});
 const websocketServer = new ws.Server({port: PORT, server: sslServer});
 
 registerCommands();
