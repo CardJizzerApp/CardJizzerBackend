@@ -5,3 +5,4 @@ Version 0.0.3
 
 Version 0.0.4
 - [X] Give each gameroom a title
+- [] Parse arguments of each command to either number, number[] or string

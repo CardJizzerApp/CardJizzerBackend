@@ -3,6 +3,7 @@ const assert = ChaiS.assert;
 const expect = ChaiS.expect;
 const ws = require("ws");
 const { stopServer, port } = require("./server");
+const {allUsers} = require("./player");
 
 describe('commandTests', () => {
     let websocket, player2;
@@ -124,6 +125,10 @@ describe('commandTests', () => {
             expect(errorCode).to.be.oneOf([1000102, 0]);
         });
         websocket.send("pickcard " + cardToPick.uuid);
+    });
+    it("logout", () => {
+        expect(allUsers.length).to.be.eql(2);
+        websocket.close();
     });
     after(() => {
         stopServer();

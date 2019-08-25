@@ -11,6 +11,8 @@ const ech = new ErrorCodeHelper();
 class CreateGame extends Command {
     /**
      * Creating game.
+     * creategame maxplayers:number deckIds:number[] password:string
+     * pointsToWin:number maxRoundTime:number gameTitle:string
      */
     constructor() {
         super('creategame', 5, false);

@@ -25,6 +25,7 @@ const {fetchCards} = require('./commands/fetchCards');
 const {fetchGames} = require('./commands/fetchGames');
 const {join} = require('./commands/join');
 const {logout} = require('./commands/logout');
+const {loginWithSecret} = require('./commands/loginWithSecret');
 const {pickCard} = require('./commands/pickCard');
 const {playCard} = require('./commands/playCard');
 const {setUsername} = require('./commands/setUsername');
@@ -45,6 +46,7 @@ exports.registerCommands = function() {
     new pickCard();
     new fetchAllPlayedCards();
     new fetchNames();
+    new loginWithSecret();
     /* eslint-enable */
 };
 

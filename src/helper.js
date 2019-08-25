@@ -18,7 +18,7 @@ module.exports.Responses = {
     OK: {errorCode: 0, message: 'OK'},
     COMMAND_NOT_FOUND: {errorCode: 1, message: 'Command not found.'},
     INVALID_USAGE: {errorCode: 2, message: 'Invalid usage.'},
-    NAME_ALREADY_TAKEN: {errorCode: 3, message: 'Username has already taken.'},
+    NAME_ALREADY_TAKEN: {errorCode: 3, message: 'Username is already in use.'},
     NOT_LOGGED_IN: {errorCode: 4, message: 'Not logged in!'},
     NOT_INGAME: {errorCode: 5, message: 'Not ingame'},
     GAME_NOT_FOUND: {errorCode: 6, message: 'Game not found!'},
@@ -32,6 +32,7 @@ module.exports.Responses = {
     PICK_PHASE_OVER: {errorCode: 12, message: 'Pick phase already over'},
     CARD_COULD_NOT_BE_PICKED:
         {errorCode: 13, message: 'Card could not be picked.'},
+    WRONG_SECRET_CODE: {errorCode: 14, message: 'Wrong secret code'},
     // Event Responses
     CARD_PLAYED: {errorCode: 1000101, message: 'Player played card!'},
     CARD_JIZZER_PICKED: {errorCode: 1000102, message: 'Cardjizzer picked!'},

@@ -2,26 +2,28 @@ const https = require('https');
 const ws = require('ws');
 const {v4} = require('uuid');
 const fs = require('fs');
+const Sentry = require('@sentry/node');
 
 const {findCommand, registerCommands} = require('./command');
+let {allUsers, removeItem} = require('./player');
 
 const {ErrorCodeHelper, Responses} = require('./helper');
 const ech = new ErrorCodeHelper();
 
 const PORT = process.env.WS_PORT || 443;
-console.log(PORT);
 const sslServer = https.createServer({
     key: fs.readFileSync(__dirname + '/ssl/priv.pem', 'utf-8'),
     cert: fs.readFileSync(__dirname + '/ssl/fullchain.pem', 'utf-8'),
 });
 const websocketServer = new ws.Server({port: PORT, server: sslServer});
 
-registerCommands();
+Sentry.init({dsn: 'https://a99b8a0f5e4f4e0cbb10d81e45aabc2a@sentry.io/1541060'});
 
-// new Game(0, ['ZR64P'], "false", 0, 0).start();
+registerCommands();
 
 websocketServer.on('connection', (ws) => {
     ws.uuid = v4();
+    ws.secretCode = v4();
     ws.on('message', (message) => {
         const commandId = message.split(';').length > 1 ?
             message.split(';')[0] + ';'
@@ -46,6 +48,15 @@ websocketServer.on('connection', (ws) => {
             }
         }
         return ws.send(ech.sendResponse(Responses.COMMAND_NOT_FOUND, null));
+    });
+    ws.on('close', () => {
+        for (let i = 0; i !== allUsers.length; i++) {
+            const player = allUsers[i];
+            if (player.uuid === ws.uuid) {
+                allUsers = removeItem(allUsers, i);
+                return;
+            }
+        };
     });
 });
 

@@ -1,4 +1,8 @@
 const {Command} = require('../command');
+const {allUsers} = require('../player');
+
+const {ErrorCodeHelper, Responses} = require('../helper');
+const ech = new ErrorCodeHelper();
 
 exports.logout = class extends Command {
     /**
