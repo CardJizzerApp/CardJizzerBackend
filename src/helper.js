@@ -40,4 +40,5 @@ module.exports.Responses = {
     GAME_OVER: {errorCode: 105, message: 'Game over!'},
     NEW_ROUND_STARTED: {errorCode: 106, message: 'New round has started!'},
     CARDS_FLIPPED: {errorCode: 107, message: 'Cards flipped!'},
+    GAME_CREATED_EVENT: {errorCode: 108, message: 'A new game was created!'},
 };

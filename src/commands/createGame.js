@@ -5,6 +5,8 @@ const {Game} = require('../game');
 const {ErrorCodeHelper, Responses} = require('../helper');
 const ech = new ErrorCodeHelper();
 
+const {GameChangedEvent, ChangeAction} = require('../events/gameChangedEvent');
+
 /**
  * Creates a game.
  */
@@ -40,6 +42,7 @@ class CreateGame extends Command {
             maxRoundTime,
             gameTitle
         );
+        new GameChangedEvent().trigger(this, ChangeAction.GAME_CREATED);
         player.join(game.id);
         return ech.sendResponse(Responses.OK, game);
     }

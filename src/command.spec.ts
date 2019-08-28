@@ -39,8 +39,10 @@ describe('commandTests', () => {
         websocket.once("message", msg => {
             const errorCode = JSON.parse(msg).errorCode;
             const maxPlayersJson = JSON.parse(msg).jsonData.maxplayers;
-            assert.equal(errorCode, 0);
-            assert.equal(maxPlayersJson, maxPlayers);
+            expect(errorCode).to.be.oneOf([0, 108]);
+            if (errorCode === 0) {
+                assert.equal(maxPlayersJson, maxPlayers);
+            }
         });
         websocket.send("creategame " + maxPlayers + " 0 false 20 SomeTitle");
     });
