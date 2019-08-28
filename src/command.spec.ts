@@ -3,6 +3,7 @@ const assert = ChaiS.assert;
 const expect = ChaiS.expect;
 const ws = require("ws");
 const { stopServer, port } = require("./server");
+const {allUsers} = require("./player");
 
 describe('commandTests', () => {
     let websocket, player2;
@@ -39,7 +40,7 @@ describe('commandTests', () => {
         websocket.once("message", msg => {
             const errorCode = JSON.parse(msg).errorCode;
             const maxPlayersJson = JSON.parse(msg).jsonData.maxplayers;
-            expect(errorCode).to.be.oneOf([0, 108]);
+            expect(errorCode).to.be.oneOf([0, 100108]);
             if (errorCode === 0) {
                 assert.equal(maxPlayersJson, maxPlayers);
             }
@@ -60,7 +61,7 @@ describe('commandTests', () => {
     it("joinGame", () => {
         websocket.once("message", msg => {
             const errorCode = JSON.parse(msg).errorCode;
-            expect(errorCode).to.be.oneOf([7, 113]);
+            expect(errorCode).to.be.oneOf([7, 1000113]);
         });
         websocket.send("join " + gameUUID);
 
@@ -97,7 +98,7 @@ describe('commandTests', () => {
     it("playcard", (done) => {
         player2.once("message", msg => {
             const errorCode = JSON.parse(msg).errorCode;
-            expect(errorCode).to.be.oneOf([101, 0, 107]);
+            expect(errorCode).to.be.oneOf([1000101, 0, 1000107]);
             done();
         });
         player2.send("playcard " + carduuid);
@@ -123,9 +124,13 @@ describe('commandTests', () => {
         websocket.on("message", msg => {
             const response = JSON.parse(msg);
             const errorCode = response.errorCode;
-            expect(errorCode).to.be.oneOf([102, 0]);
+            expect(errorCode).to.be.oneOf([1000102, 0]);
         });
         websocket.send("pickcard " + cardToPick.uuid);
+    });
+    it("logout", () => {
+        expect(allUsers.length).to.be.eql(2);
+        websocket.close();
     });
     after(() => {
         stopServer();

@@ -14,6 +14,7 @@
   "author": "IJustDev",
   "license": "ISC",
   "dependencies": {
+    "@sentry/node": "^5.6.2",
     "cardcast-api": "^0.2.3",
     "express": "^4.17.1",
     "express-ws": "^4.0.0",

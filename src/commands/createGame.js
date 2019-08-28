@@ -13,6 +13,8 @@ const {GameChangedEvent, ChangeAction} = require('../events/gameChangedEvent');
 class CreateGame extends Command {
     /**
      * Creating game.
+     * creategame maxplayers:number deckIds:number[] password:string
+     * pointsToWin:number maxRoundTime:number gameTitle:string
      */
     constructor() {
         super('creategame', 5, false);
@@ -44,7 +46,9 @@ class CreateGame extends Command {
         );
         new GameChangedEvent().trigger(this, ChangeAction.GAME_CREATED);
         player.join(game.id);
-        return ech.sendResponse(Responses.OK, game);
+        return ech.sendResponse(Responses.OK, {
+            maxplayers: Number.parseInt(maxPlayers),
+        });
     }
 }
 

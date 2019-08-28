@@ -1,6 +1,8 @@
-const {getGameByUUID, GameState} = require('./game');
+const {v4} = require('uuid');
 
-const allUsers = [];
+const {getGameByUUID, GameState} = require('./game');
+/*eslint-disable*/
+let allUsers = [];
 module.exports.allUsers = allUsers;
 
 const player = class {
@@ -10,6 +12,7 @@ const player = class {
      */
     constructor(websocket, username) {
         this.uuid = websocket.uuid;
+        this.secretCode = v4();
         this.websocket = websocket;
         this.username = username;
         this.currentGameUUID = -1;
