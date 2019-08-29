@@ -42,4 +42,5 @@ module.exports.Responses = {
     NEW_ROUND_STARTED: {errorCode: 1000106, message: 'New round has started!'},
     CARDS_FLIPPED: {errorCode: 1000107, message: 'Cards flipped!'},
     GAME_CREATED_EVENT: {errorCode: 100108, message: 'A new game was created!'},
+    PING: {errorCode: 100000, message: 'Ping'},
 };

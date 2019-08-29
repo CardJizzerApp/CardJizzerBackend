@@ -1,6 +1,7 @@
 const {v4} = require('uuid');
 
 const {getGameByUUID, GameState} = require('./game');
+
 /*eslint-disable*/
 let allUsers = [];
 module.exports.allUsers = allUsers;
@@ -16,6 +17,13 @@ const player = class {
         this.websocket = websocket;
         this.username = username;
         this.currentGameUUID = -1;
+        this.lastPing = new Date().getTime();
+        // TODO: Uncomment without failing tests.
+        // this.handle = setTimeout(() => {
+        //     if (new Date().getTime() - this.lastPing > 1000*15) {
+        //         clearTimeout(this.handle);
+        //     }
+        // }, 1000);
         allUsers.push(this);
     }
     /**
@@ -61,6 +69,19 @@ const player = class {
         }
         game.addToGame(this);
         return true;
+    }
+    /**
+     * Removes the player from the allUsers array
+     * @return {boolean}
+     */
+    destroy() {
+        let length = allUsers.length;
+        removeItem(allUsers, allUsers.indexOf(this));
+        length = length - 1;
+        if (allUsers.length === length) {
+            return true;
+        }
+        return false;
     }
 };
 
