@@ -1,6 +1,7 @@
 const {Event} = require('./event');
+const {allUsers} = require('../userUtils');
+
 const {ErrorCodeHelper, Responses} = require('../helper');
-const {allUsers} = require('../player');
 
 const ech = new ErrorCodeHelper();
 
@@ -13,10 +14,10 @@ exports.ChangeAction = {
 
 exports.GameChangedEvent = class extends Event {
     /**
-     * @param {*} jsonData
      * @param {ChangeAction} action
+     * @param {*} jsonData
      */
-    trigger(jsonData, action) {
+    trigger(action, jsonData) {
         for (let i = 0; i !== allUsers.length; i++) {
             const player = allUsers[i];
             const websocket = player.websocket;

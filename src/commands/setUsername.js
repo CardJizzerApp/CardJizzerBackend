@@ -1,5 +1,6 @@
 const {Command} = require('../command');
-const {allUsers, getPlayerByUUID, Player} = require('../player');
+const {getPlayerByUUID, Player} = require('../player');
+const {allUsers} = require('../userUtils');
 
 const {ErrorCodeHelper, Responses} = require('../helper');
 const ech = new ErrorCodeHelper();

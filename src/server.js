@@ -4,8 +4,10 @@ const {v4} = require('uuid');
 const fs = require('fs');
 const Sentry = require('@sentry/node');
 
+let {allUsers} = require('./userUtils');
+const {removeItem} = require('./player');
+
 const {findCommand, registerCommands} = require('./command');
-let {allUsers, removeItem} = require('./player');
 
 const {ErrorCodeHelper, Responses} = require('./helper');
 const ech = new ErrorCodeHelper();

@@ -5,7 +5,7 @@ const {Card} = require('./card');
 const {GAME_CONFIG} = require('./config');
 
 const {GameOverEvent} = require('./events/gameOverEvent');
-
+const {GameChangedEvent, ChangeAction} = require('./events/gameChangedEvent');
 
 const api = new CardCastAPI.CardcastAPI();
 
@@ -96,6 +96,15 @@ const Game = class {
      */
     stop() {
         this.state = GameState.LOBBY;
+        setTimeout(() => {
+            for (let i = 0; i !== this.players.length; i++) {
+                const player = this.players[i];
+                player.currentGameUUID = -1;
+            }
+            new GameChangedEvent().trigger(ChangeAction.GAME_REMOVED, null);
+            delete allGames[allGames.indexOf(this)];
+            delete this;
+        }, 10 * 1000);
     }
     /**
      * @param {number[]} deckIds
@@ -133,7 +142,6 @@ const Game = class {
             }
         }
     }
-
     /**
      *
      * @param {*} player
@@ -250,6 +258,34 @@ const Game = class {
             player.currentGameUUID = -1;
         }
         delete allGames[this];
+    }
+    /**
+     * Returns all players with minified information. (UUID and USERNAME)
+     * @return {Player[]}
+     */
+    allPlayersToJSON() {
+        const playerList = [];
+        for (let i = 0; i !== this.players.length; i++) {
+            const player = this.players[i];
+            playerList.push(player.toJSON());
+        }
+        return playerList;
+    }
+    /**
+     * Returns the game with minified information.
+     * @return {any}
+     */
+    toJSON() {
+        return {
+            id: this.id,
+            title: this.title,
+            deckIds: this.deckIds,
+            passwordRequired: this.passwordRequired,
+            maxplayers: this.maxplayers,
+            players: this.allPlayersToJSON(),
+            scoreboard: this.scoreboard,
+            pointsToWin: this.pointsToWin,
+        };
     }
 };
 module.exports.Game = Game;

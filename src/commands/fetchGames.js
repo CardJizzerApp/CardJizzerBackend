@@ -20,10 +20,8 @@ exports.fetchGames = class extends Command {
     run(args) {
         const allGamesToServe = [];
         for (let i = 0; i !== allGames.length; i++) {
-            const game = JSON.parse(JSON.stringify(allGames[i]));
-            game.password = undefined;
-            game.players = undefined;
-            allGamesToServe.push(game);
+            const game = allGames[i];
+            allGamesToServe.push(game.toJSON());
         }
         return ech.sendResponse(Responses.OK, allGamesToServe);
     }

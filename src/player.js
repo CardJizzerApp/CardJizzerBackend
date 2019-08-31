@@ -1,10 +1,9 @@
 const {v4} = require('uuid');
 
-const {getGameByUUID, GameState} = require('./game');
+const {GameChangedEvent, ChangeAction} = require('./events/gameChangedEvent');
 
-/*eslint-disable*/
-let allUsers = [];
-module.exports.allUsers = allUsers;
+const {getGameByUUID, GameState} = require('./game');
+const {allUsers} = require('./userUtils');
 
 const player = class {
     /**
@@ -67,7 +66,26 @@ const player = class {
                 return false;
             }
         }
+        new GameChangedEvent().trigger(
+            ChangeAction.PLAYER_JOINED,
+            this.toJSON()
+        );
         game.addToGame(this);
+        return true;
+    }
+    /**
+     * Leaves the current game
+     * @return {boolean}
+     */
+    leave() {
+        const game = getGameByUUID(this.currentGameUUID);
+        if (game === undefined) {
+            return false;
+        }
+        new GameChangedEvent().trigger(
+            ChangeAction.PLAYER_LEFT,
+            game.toJSON()
+        );
         return true;
     }
     /**
@@ -82,6 +100,17 @@ const player = class {
             return true;
         }
         return false;
+    }
+    /**
+     * Returns a json object with minimal information.
+     * @return {any}
+     */
+    toJSON() {
+        const playerToReturn = {
+            username: this.username,
+            uuid: this.uuid,
+        };
+        return playerToReturn;
     }
 };
 

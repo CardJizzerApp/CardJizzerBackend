@@ -3,7 +3,7 @@ const assert = ChaiS.assert;
 const expect = ChaiS.expect;
 const ws = require("ws");
 const { stopServer, port } = require("./server");
-const {allUsers} = require("./player");
+const {allUsers} = require("./userUtils");
 
 describe('commandTests', () => {
     let websocket, player2;
@@ -67,7 +67,7 @@ describe('commandTests', () => {
 
         player2.once("message", msg => {
             const errorCode = JSON.parse(msg).errorCode;
-            assert.equal(errorCode, 0);
+            expect(errorCode).to.be.oneOf([0, 100108]);
         });
         player2.send("join " + gameUUID);
     });

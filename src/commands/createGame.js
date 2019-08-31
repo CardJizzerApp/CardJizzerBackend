@@ -44,11 +44,12 @@ class CreateGame extends Command {
             maxRoundTime,
             gameTitle
         );
-        new GameChangedEvent().trigger(this, ChangeAction.GAME_CREATED);
         player.join(game.id);
-        return ech.sendResponse(Responses.OK, {
-            maxplayers: Number.parseInt(maxPlayers),
-        });
+        new GameChangedEvent().trigger(
+            ChangeAction.GAME_CREATED,
+            game.toJSON()
+        );
+        return ech.sendResponse(Responses.OK, game.toJSON());
     }
 }
 
