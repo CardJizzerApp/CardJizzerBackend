@@ -25,15 +25,25 @@ describe('commandTests', () => {
             const errorCode = JSON.parse(msg).errorCode;
             assert.equal(errorCode, 0);
         })
-        websocket.send("setusername test");
-        player2.send("setusername test2");
+        const commandObject = {
+            command: "setusername",
+            params: {
+                username: "test",
+            },
+        }
+        websocket.send(JSON.stringify(commandObject));
+        commandObject.params.username = "test2";
+        player2.send(JSON.stringify(commandObject));
     });
     it("fetchGames", () => {
         websocket.once("message", msg => {
             const errorCode = JSON.parse(msg).errorCode;
             assert.equal(errorCode, 0);
         });
-        websocket.send("fetchgames");
+        const commandObject = {
+            command: "fetchgames",
+        };
+        websocket.send(JSON.stringify(commandObject));
     });
     it("createGame", () => {
         const maxPlayers = 4;
@@ -45,7 +55,18 @@ describe('commandTests', () => {
                 assert.equal(maxPlayersJson, maxPlayers);
             }
         });
-        websocket.send("creategame " + maxPlayers + " 0 false 20 SomeTitle");
+        const commandObject = {
+            command: "creategame",
+            params: {
+                maxplayers: maxPlayers,
+                deckids: ['3723A', '23kck'],
+                password: 'Testpassword',
+                pointstowin: 8,
+                maxroundtime: 240,
+                gametitle: 'Samplegame'
+            }
+        }
+        websocket.send(JSON.stringify(commandObject));
     });
     let gameUUID;
     it("fetchGames after creation", () => {
@@ -56,20 +77,29 @@ describe('commandTests', () => {
             assert.equal(games.length, 1);
             gameUUID = games[0].id;
         });
-        websocket.send("fetchgames");
+        const commandObject = {
+            command: "fetchgames"
+        };
+        websocket.send(JSON.stringify(commandObject));
     });
     it("joinGame", () => {
         websocket.once("message", msg => {
             const errorCode = JSON.parse(msg).errorCode;
             expect(errorCode).to.be.oneOf([7, 1000113]);
         });
-        websocket.send("join " + gameUUID);
+        const commandObject = {
+            command: "join",
+            params: {
+                gameid: gameUUID,
+            },
+        };
+        websocket.send(JSON.stringify(commandObject));
 
         player2.once("message", msg => {
             const errorCode = JSON.parse(msg).errorCode;
             expect(errorCode).to.be.oneOf([0, 100108]);
         });
-        player2.send("join " + gameUUID);
+        player2.send(JSON.stringify(commandObject));
     });
     it("startGame", (done) => {
         websocket.once("message", async (msg) => {
@@ -77,7 +107,10 @@ describe('commandTests', () => {
             assert.equal(errorCode, 0);
             done();
         });
-        websocket.send("start");
+        const commandObject = {
+            command: "start",
+        };
+        websocket.send(JSON.stringify(commandObject));
     });
     let carduuid = undefined;
     let carduuid2 = undefined;
@@ -93,7 +126,10 @@ describe('commandTests', () => {
             carduuid2 = cards[1].uuid;
             carduuid3 = cards[2].uuid;
         });
-        player2.send("fetchcards");
+        const commandObject = {
+            command: "fetchcards",
+        };
+        player2.send(JSON.stringify(commandObject));
     });
     it("playcard", (done) => {
         player2.once("message", msg => {
@@ -101,9 +137,17 @@ describe('commandTests', () => {
             expect(errorCode).to.be.oneOf([1000101, 0, 1000107]);
             done();
         });
-        player2.send("playcard " + carduuid);
-        player2.send("playcard " + carduuid2);
-        player2.send("playcard " + carduuid3);
+        const commandObject = {
+            command: "playcard",
+            params: {
+                cardid: carduuid
+            }
+        }
+        player2.send(JSON.stringify(commandObject));
+        commandObject.params.cardid = carduuid2;
+        player2.send(JSON.stringify(commandObject));
+        commandObject.params.cardid = carduuid3;
+        player2.send(JSON.stringify(commandObject));
     });
     let cardToPick = undefined;
     it("fetchallcards", () => {
@@ -113,20 +157,30 @@ describe('commandTests', () => {
             const jsonData = JSON.parse(msg).jsonData;
             cardToPick = jsonData[Object.keys(jsonData)[0]][0];
         });
-        websocket.send("fetchallcards");
+        const commandObject = {
+            command: "fetchallcards"
+        };
+        websocket.send(JSON.stringify(commandObject));
     });
     it("pickcard", () => {
         player2.once("message", msg => {
             const errorCode = JSON.parse(msg).errorCode;
             assert.equal(errorCode, 10);
         });
-        player2.send("pickcard aasdd");
         websocket.on("message", msg => {
             const response = JSON.parse(msg);
             const errorCode = response.errorCode;
             expect(errorCode).to.be.oneOf([1000102, 0]);
         });
-        websocket.send("pickcard " + cardToPick.uuid);
+        const commandObject = {
+            command: "pickcard",
+            params: {
+                cardid: "somenonesense",
+            },
+        };
+        player2.send(JSON.stringify(commandObject));
+        commandObject.params.cardid = cardToPick.uuid;
+        websocket.send(JSON.stringify(commandObject));
     });
     it("logout", () => {
         expect(allUsers.length).to.be.eql(2);

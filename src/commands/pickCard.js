@@ -14,7 +14,7 @@ exports.pickCard = class extends Command {
      * pickcard [cardUUID: string]
      */
     constructor() {
-        super('pickcard', 1, false);
+        super('pickcard', ['cardid'], false);
     }
     /**
      * @param {string[]} args
@@ -23,7 +23,7 @@ exports.pickCard = class extends Command {
      */
     run(args, ws) {
         const player = getPlayerByUUID(ws.uuid);
-        const carduuid = args[0];
+        const carduuid = args.cardid;
         if (player === undefined) {
             return ech.sendResponse(Responses.NOT_LOGGED_IN, null);
         }

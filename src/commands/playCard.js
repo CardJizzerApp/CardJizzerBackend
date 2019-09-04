@@ -15,7 +15,7 @@ exports.playCard = class extends Command {
      * playcard [cardUUID: string]
      */
     constructor() {
-        super('playcard', 1);
+        super('playcard', ['cardid']);
     }
     /**
      * @param {string[]} args
@@ -23,7 +23,7 @@ exports.playCard = class extends Command {
      * @return {string}
      */
     run(args, ws) {
-        const cardUUID = args[0];
+        const cardUUID = args.cardid;
         const player = getPlayerByUUID(ws.uuid);
         if (player === undefined) {
             return ech.sendResponse(Responses.NOT_LOGGED_IN, null);

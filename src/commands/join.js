@@ -13,7 +13,7 @@ exports.join = class extends Command {
      * join [gameUUID: UUID / string]
      */
     constructor() {
-        super('join', 1);
+        super('join', ['gameid']);
     }
     /**
      * @param {string[]} args
@@ -21,7 +21,7 @@ exports.join = class extends Command {
      * @return {string}
      */
     run(args, ws) {
-        const gameUUID = args[0];
+        const gameUUID = args.gameid;
         const player = getPlayerByUUID(ws.uuid);
         if (player === undefined) {
             return ech.sendResponse(Responses.NOT_LOGGED_IN, null);

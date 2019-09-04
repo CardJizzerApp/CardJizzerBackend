@@ -30,23 +30,49 @@ websocketServer.on('connection', (ws) => {
         const commandId = message.split(';').length > 1 ?
             message.split(';')[0] + ';'
             : '';
-        const args = message.split(' ');
-        const commandName = commandId === '' ? args[0] : args[0].split(';')[1];
+        let request = undefined;
+        try {
+            request = commandId == ''?
+                JSON.parse(message):
+                JSON.parse(message.split([1]));
+        } catch (Error) {
+            return ws.send(ech.sendResponse(Responses.INVALID_JSON, null));
+        }
+        const commandName = request.command;
         const command = findCommand(commandName);
 
         if (command !== undefined) {
-            if ((args.length - 1) !== command.argsLength) {
+            // if ((args.length - 1) !== command.argsLength) {
+            //     return ws.send(commandId +
+            //         ech.sendResponse(Responses.INVALID_USAGE, null));
+            // } else {
+            //     if (command.async === undefined || command.async === false) {
+            //         return ws.send(commandId +
+            //             command.run(args.slice(1), ws));
+            //     } else {
+            //         return command.run(args.slice(1), ws).then((response) =>{
+            //             return ws.send(commandId + response);
+            //         });
+            //     }
+            // }
+            let args = request.params;
+            if (args === undefined) {
+                args = {};
+            }
+            const argsKeys = Object.keys(args);
+            const requiredArgs = command.requiredArgs;
+            for (let i = 0; i !== requiredArgs.length; i++) {
+                if (argsKeys.indexOf(requiredArgs[i]) !== -1) continue;
                 return ws.send(commandId +
                     ech.sendResponse(Responses.INVALID_USAGE, null));
+            }
+            if (command.async === undefined || command.async === false) {
+                return ws.send(commandId +
+                    command.run(args, ws));
             } else {
-                if (command.async === undefined || command.async === false) {
-                    return ws.send(commandId +
-                        command.run(args.slice(1), ws));
-                } else {
-                    return command.run(args.slice(1), ws).then((response) => {
-                        return ws.send(commandId + response);
-                    });
-                }
+                return command.run(args, ws).then((response) => {
+                    return ws.send(commandId + response);
+                });
             }
         }
         return ws.send(ech.sendResponse(Responses.COMMAND_NOT_FOUND, null));
@@ -66,4 +92,3 @@ module.exports.stopServer = function() {
     websocketServer.close();
 };
 module.exports.port = PORT;
-

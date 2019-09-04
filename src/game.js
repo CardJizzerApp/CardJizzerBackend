@@ -42,7 +42,10 @@ const Game = class {
         this.maxRoundTime = maxRoundTime;
         this.state = GameState.LOBBY;
         this.players = [];
-        this.title = title || v4();
+        this.title = title;
+        if (this.title === undefined) {
+            this.title = v4();
+        }
         this.cards = {
             calls: [],
             responses: [],

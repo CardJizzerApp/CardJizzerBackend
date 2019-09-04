@@ -10,7 +10,7 @@ exports.fetchGames = class extends Command {
      * Fetch all available games.
      */
     constructor() {
-        super('fetchgames', 0);
+        super('fetchgames', []);
     }
     /**
      * @param {string[]} args

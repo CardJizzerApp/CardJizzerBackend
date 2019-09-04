@@ -10,7 +10,7 @@ exports.start = class extends Command {
      * Start command for starting a game.
      */
     constructor() {
-        super('start', 0, true);
+        super('start', [], true);
     }
     /**
      * @param {string[]} args

@@ -10,7 +10,7 @@ exports.setUsername = class extends Command {
      * setusername [username: string]
      */
     constructor() {
-        super('setusername', 1);
+        super('setusername', ['username']);
     }
     /**
      * @param {string[]} args
@@ -18,7 +18,7 @@ exports.setUsername = class extends Command {
      * @return {string}
      */
     run(args, ws) {
-        const usernameGiven = args[0];
+        const usernameGiven = args.username;
         for (let i = 0; i !== allUsers.length; i++) {
             const player = allUsers[i];
             if (player.username.toLowerCase() === usernameGiven.toLowerCase()) {

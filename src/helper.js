@@ -33,6 +33,7 @@ module.exports.Responses = {
     CARD_COULD_NOT_BE_PICKED:
         {errorCode: 13, message: 'Card could not be picked.'},
     WRONG_SECRET_CODE: {errorCode: 14, message: 'Wrong secret code'},
+    INVALID_JSON: {errorCode: 15, message: 'JSON invalid'},
     // Event Responses
     CARD_PLAYED: {errorCode: 1000101, message: 'Player played card!'},
     CARD_JIZZER_PICKED: {errorCode: 1000102, message: 'Cardjizzer picked!'},

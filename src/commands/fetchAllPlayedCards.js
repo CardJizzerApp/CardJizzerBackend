@@ -11,7 +11,7 @@ exports.fetchAllPlayedCards = class extends Command {
      * Fetch all laid down cards.
      */
     constructor() {
-        super('fetchallcards', 0);
+        super('fetchallcards', []);
     }
     /**
      * @param {string[]} args

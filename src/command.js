@@ -3,12 +3,12 @@ const allCommands = [];
 exports.Command = class {
     /**
      * @param {string} commandname
-     * @param {number} argsLength
+     * @param {object} requiredArgs
      * @param {boolean} async
      */
-    constructor(commandname, argsLength, async) {
+    constructor(commandname, requiredArgs, async) {
         this.commandname = commandname;
-        this.argsLength = argsLength;
+        this.requiredArgs = requiredArgs;
         this.async = async;
         allCommands.push(this);
     }

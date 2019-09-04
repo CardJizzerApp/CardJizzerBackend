@@ -11,7 +11,7 @@ exports.fetchCards = class extends Command {
      * Fetch users' cards
      */
     constructor() {
-        super('fetchcards', 0);
+        super('fetchcards', []);
     }
     /**
      * @param {string[]} args

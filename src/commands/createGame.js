@@ -17,7 +17,14 @@ class CreateGame extends Command {
      * pointsToWin:number maxRoundTime:number gameTitle:string
      */
     constructor() {
-        super('creategame', 5, false);
+        super('creategame', [
+            'maxplayers',
+            'deckids',
+            'password',
+            'pointstowin',
+            'maxroundtime',
+            'gametitle',
+        ], false);
     }
     /**
      * @param {string[]} args
