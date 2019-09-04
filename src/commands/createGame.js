@@ -36,16 +36,15 @@ class CreateGame extends Command {
         if (player === undefined) {
             return ech.sendResponse(Responses.NOT_LOGGED_IN, null);
         }
-        const maxPlayers = args[0];
-        // const deckIds = args[1];
-        const password = args[2];
-        // const passwordRequired = password !== 'false';
-        const pointsToWin = args[3];
-        const maxRoundTime = args[4];
-        const gameTitle = args[5];
+        const maxPlayers = args.maxplayers;
+        const deckIds = args.deckids;
+        const password = args.password;
+        const pointsToWin = args.pointstowin;
+        const maxRoundTime = args.maxroundtime;
+        const gameTitle = args.gametitle;
         const game = new Game(
             maxPlayers,
-            ['SFG96'],
+            deckIds,
             password,
             pointsToWin,
             maxRoundTime,

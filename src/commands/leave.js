@@ -7,12 +7,12 @@ const {getPlayerByUUID} = require('../player');
 
 const ech = new ErrorCodeHelper();
 
-exports.getPoints = class extends Command {
+exports.leave = class extends Command {
     /**
      * Get points of players in the current game.
      */
     constructor() {
-        super('getpoints', [], false);
+        super('leave', [], false);
     }
     /**
      * @param {string[]} args
@@ -28,7 +28,10 @@ exports.getPoints = class extends Command {
         if (game === undefined) {
             return ech.sendResponse(Responses.NOT_INGAME, null);
         }
-        return ech.sendResponse(Responses.OK, game.scoreboard);
+        if (game.removeFromgame(player)) {
+            return ech.sendResponse(Responses.OK, null);
+        }
+        return ech.sendResponse(Responses.NOT_INGAME);
     }
 };
 

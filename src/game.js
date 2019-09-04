@@ -157,6 +157,18 @@ const Game = class {
     }
     /**
      * @param {Player} player
+     * @return {boolean}
+     */
+    removeFromGame(player) {
+        const index = this.players.indexOf(player);
+        if (index !== -1) {
+            delete this.players[index];
+            return true;
+        }
+        return false;
+    }
+    /**
+     * @param {Player} player
      */
     giveCard(player) {
         if (this.playerCardStacks[player.uuid] === undefined) {
