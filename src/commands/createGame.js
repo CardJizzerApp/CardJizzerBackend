@@ -36,19 +36,15 @@ class CreateGame extends Command {
         if (player === undefined) {
             return ech.sendResponse(Responses.NOT_LOGGED_IN, null);
         }
-        const maxPlayers = args.maxplayers;
-        const deckIds = args.deckids;
-        const password = args.password;
-        const pointsToWin = args.pointstowin;
-        const maxRoundTime = args.maxroundtime;
-        const gameTitle = args.gametitle;
+        const {maxplayers, deckids, password, pointstowin,
+            maxroundtime, gametitle} = args;
         const game = new Game(
-            maxPlayers,
-            deckIds,
+            maxplayers,
+            deckids,
             password,
-            pointsToWin,
-            maxRoundTime,
-            gameTitle
+            pointstowin,
+            maxroundtime,
+            gametitle
         );
         player.join(game.id);
         new GameChangedEvent().trigger(

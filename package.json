@@ -1,13 +1,16 @@
 {
   "name": "cah-backend",
-  "version": "0.0.4",
+  "version": "0.0.5",
   "description": "Backend for CAH.",
   "main": "index.js",
   "scripts": {
     "setup": "git config core.hooksPath hooks",
     "build": "gulp",
     "dev": "npm run setup && node ./src/server.js",
-    "test": "npm run setup && mocha ./src/*.spec.ts  --timeout 7000",
+    "prod": "npm run setup && NODE_ENV='prod' node ./src/server.js",
+    "sub-dir-tests": "mocha './src/commands/*.spec.js' --timeout 7000",
+    "root-dir-tests": "mocha './src/*.spec.js' --timeout 7000",
+    "test": "npm run setup && npm run sub-dir-tests && npm run root-dir-tests",
     "lint": "npm run setup && eslint src",
     "pre-commit": "npm run test && npm run lint"
   },
@@ -15,9 +18,16 @@
   "license": "ISC",
   "dependencies": {
     "@sentry/node": "^5.6.2",
+    "axios": "^0.19.0",
     "cardcast-api": "^0.2.3",
     "express": "^4.17.1",
     "express-ws": "^4.0.0",
+    "google-auth-library": "^5.2.1",
+    "mongo": "^0.1.0",
+    "mongodb": "^3.3.2",
+    "mongoose": "^5.7.0",
+    "querystring": "^0.2.0",
+    "redis": "^2.8.0",
     "uuid": "^3.3.2",
     "ws": "^7.1.2"
   },
@@ -27,12 +37,10 @@
     "eslint": "^6.2.1",
     "eslint-config-google": "^0.13.0",
     "gulp": "^4.0.2",
+    "gulp-babel-minify": "^0.5.1",
     "gulp-clean": "^0.4.0",
-    "gulp-include": "^2.4.1",
+    "gulp-concat": "^2.6.1",
     "gulp-minify": "^3.1.0",
-    "gulp-require-modules": "^1.1.4",
-    "gulp-uglify": "^3.0.2",
-    "jshint": "^2.10.2",
     "mocha": "^6.2.0"
   }
 }

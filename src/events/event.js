@@ -1,6 +1,6 @@
 exports.Event = class {
     /**
-     * abstract function
+     * Abstract function
      */
     trigger() {}
 };

@@ -1,6 +1,6 @@
 const phaseState = {
-    PlayCards: {name: 'playCards', id: 1},
-    SelectCard: {name: 'selectCard', id: 2},
+    PlayCards: {id: 1, name: 'playCards'},
+    SelectCard: {id: 2, name: 'selectCard'},
 };
 module.exports.phaseState = phaseState;
 

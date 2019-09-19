@@ -11,7 +11,7 @@ const ech = new ErrorCodeHelper();
 
 exports.pickCard = class extends Command {
     /**
-     * pickcard [cardUUID: string]
+     * Pickcard [cardUUID: string]
      */
     constructor() {
         super('pickcard', ['cardid'], false);
@@ -27,16 +27,22 @@ exports.pickCard = class extends Command {
         if (player === undefined) {
             return ech.sendResponse(Responses.NOT_LOGGED_IN, null);
         }
-        if (player.currentGameUUID === -1) {
-            return ech.sendResponse(Responses.NOT_INGAME, null);
-        }
         const game = getGameByUUID(player.currentGameUUID);
-        if (game === undefined || game.state !== GameState.INGAME) {
+        if (player.currentGameUUID === -1 ||
+            game === undefined || game.state !== GameState.INGAME) {
             return ech.sendResponse(Responses.NOT_INGAME, null);
         }
         if (game.round.cardJizzer.uuid !== player.uuid) {
             return ech.sendResponse(Responses.NOT_CARD_JIZZER, null);
         }
+        return this.pickCard(game, carduuid);
+    }
+    /**
+     * @param {Game} game
+     * @param {string} carduuid
+     * @return {string}
+     */
+    pickCard(game, carduuid) {
         const keys = Object.keys(game.round.allCards);
         for (let i = 0; i !== keys.length; i++) {
             const playerUUID = keys[i];
@@ -53,7 +59,7 @@ exports.pickCard = class extends Command {
                     }
                 }
             }
+            return ech.sendResponse(Responses.CARD_COULD_NOT_BE_PICKED, null);
         }
-        return ech.sendResponse(Responses.CARD_COULD_NOT_BE_PICKED, null);
     }
 };

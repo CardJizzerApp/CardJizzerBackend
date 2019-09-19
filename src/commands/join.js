@@ -10,7 +10,7 @@ const ech = new ErrorCodeHelper();
 
 exports.join = class extends Command {
     /**
-     * join [gameUUID: UUID / string]
+     * Join [gameUUID: UUID / string]
      */
     constructor() {
         super('join', ['gameid']);

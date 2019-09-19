@@ -1,0 +1,17 @@
+version: '3'
+
+services:
+  redis:
+    image: 'bitnami/redis:latest'
+    environment:
+      - ALLOW_EMPTY_PASSWORD=yes
+  mongo:
+    image: mongo
+  backend:
+    build: .
+    image: mypenink/cardjizzer-backend
+    ports:
+      - "443:443"
+    links:
+      - "mongo:mongo"
+      - "redis:redis"

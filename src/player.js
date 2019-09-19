@@ -18,9 +18,9 @@ const player = class {
         this.currentGameUUID = -1;
         this.lastPing = new Date().getTime();
         // TODO: Uncomment without failing tests.
-        // this.handle = setTimeout(() => {
-        //     if (new Date().getTime() - this.lastPing > 1000*15) {
-        //         clearTimeout(this.handle);
+        // This.handle = setTimeout(() => {
+        //     If (new Date().getTime() - this.lastPing > 1000*15) {
+        //         ClearTimeout(this.handle);
         //     }
         // }, 1000);
         allUsers.push(this);

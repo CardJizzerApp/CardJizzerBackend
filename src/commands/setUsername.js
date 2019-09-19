@@ -7,7 +7,7 @@ const ech = new ErrorCodeHelper();
 
 exports.setUsername = class extends Command {
     /**
-     * setusername [username: string]
+     * Setusername [username: string]
      */
     constructor() {
         super('setusername', ['username']);

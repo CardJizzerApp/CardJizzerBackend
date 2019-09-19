@@ -7,9 +7,9 @@ const ech = new ErrorCodeHelper();
 
 exports.ChangeAction = {
     GAME_CREATED: 1,
+    GAME_REMOVED: 4,
     PLAYER_JOINED: 2,
     PLAYER_LEFT: 3,
-    GAME_REMOVED: 4,
 };
 
 exports.GameChangedEvent = class extends Event {
