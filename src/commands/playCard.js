@@ -12,7 +12,7 @@ const ech = new ErrorCodeHelper();
 
 exports.playCard = class extends Command {
     /**
-     * playcard [cardUUID: string]
+     * Playcard [cardUUID: string]
      */
     constructor() {
         super('playcard', ['cardid']);

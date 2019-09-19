@@ -7,13 +7,14 @@ module.exports.ErrorCodeHelper = class {
     sendResponse(response, jsonData) {
         return JSON.stringify({
             errorCode: response.errorCode,
-            message: response.message,
             jsonData: jsonData,
+            message: response.message,
         });
     }
 };
 
 
+/* eslint-disable */
 module.exports.Responses = {
     OK: {errorCode: 0, message: 'OK'},
     COMMAND_NOT_FOUND: {errorCode: 1, message: 'Command not found.'},
@@ -42,6 +43,7 @@ module.exports.Responses = {
     GAME_OVER: {errorCode: 1000105, message: 'Game over!'},
     NEW_ROUND_STARTED: {errorCode: 1000106, message: 'New round has started!'},
     CARDS_FLIPPED: {errorCode: 1000107, message: 'Cards flipped!'},
-    GAME_CREATED_EVENT: {errorCode: 100108, message: 'A new game was created!'},
-    PING: {errorCode: 100000, message: 'Ping'},
+    GAME_CREATED_EVENT: {errorCode: 1000108, message: 'A new game was created!'},
+    PING: {errorCode: 1000000, message: 'Ping'},
 };
+/* eslint-enable */

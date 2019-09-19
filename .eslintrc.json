@@ -18,6 +18,15 @@
         "linebreak-style": 0,
         "indent": ["error", 4],
         "semi": ["error", "always"],
-        "camelcase": "error"
+        "camelcase": "error",
+        "max-lines-per-function": ["error", 25],
+        "complexity": ["error", 10],
+        "vars-on-top": "warn",
+        "sort-imports": "error",
+        "sort-keys": "error",
+        "sort-vars": "warn",
+        "max-params": ["error", {"max": 3}],
+        "capitalized-comments": "error",
+        "no-extra-parens": "warn"
     }
 }
