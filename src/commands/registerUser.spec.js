@@ -9,24 +9,6 @@ const {connectToEmptyDatabase, disconnectDatabase} = require('../testUtils');
 
 const testClass = new RegisterUser();
 
-describe('Token functions', () => {
-    it(
-        'Check token function with valid token should return true',
-        async () => {
-            if (env.TESTENV.OAUTH_TESTS) {
-                const response = await testClass.isTokenValid(
-                    env.TESTENV.GOOGLE_ACCESS_TOKEN);
-                expect(response).true;
-            }
-        }
-    );
-    it(
-        'Check token function with invalid token should return false',
-        async () => {
-            expect(await testClass.isTokenValid('notoken')).false;
-        }
-    );
-});
 
 describe('Register functions', () => {
     it('Register with invalid userObject should return false', async () => {

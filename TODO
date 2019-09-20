@@ -25,3 +25,5 @@
 # Version 0.0.6
 - [] Command cooldown
 - [] Redis: Save user
+- [] Login command: Google Authtoken
+- [] Delete setUsername command 

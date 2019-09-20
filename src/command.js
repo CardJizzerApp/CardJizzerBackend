@@ -64,9 +64,11 @@ const {setUsername} = require('./commands/setUsername');
 const {start} = require('./commands/start');
 const {fetchNames} = require('./commands/fetchNames');
 const {registerUser} = require('./commands/registerUser');
+const {login} = require('./commands/login');
 
 exports.registerCommands = function registerCommands(app) {
     /* eslint-disable */
+    new login().setApp(app);
     new registerUser().setApp(app);
     new createGame().setApp(app);
     new fetchGames().setApp(app);
@@ -92,6 +94,7 @@ exports.Start = start;
 exports.FetchCards = fetchCards;
 exports.FetchAllPlayedCards = fetchAllPlayedCards;
 exports.FetchNames = fetchNames;
+exports.Login = login;
 
 exports.findCommand = function(commandname) {
     for (let i = 0; i !== allCommands.length; i++) {

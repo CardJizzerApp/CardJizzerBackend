@@ -91,13 +91,14 @@ exports.App = class App {
                 });
             });
             ws.on('close', () => {
-                for (let i = 0; i !== allUsers.length; i++) {
-                    const player = allUsers[i];
-                    if (player.uuid === ws.uuid) {
+                let i = 0;
+                allUsers.forEach((player) => {
+                    if (player.uuid = ws.uuid) {
                         allUsers = removeItem(allUsers, i);
+                        i += 1;
                         return;
                     }
-                };
+                });
             });
         });
     }
@@ -177,7 +178,6 @@ exports.App = class App {
     stop() {
         console.log('[*] Stopping server');
         this.websocketServer.close();
-        process.exit(0);
     };
     /**
      * Port the server is running on.

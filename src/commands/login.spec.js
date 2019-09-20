@@ -1,0 +1,32 @@
+const {expect} = require('chai');
+
+const {Responses} = require('../helper');
+const {Login} = require('../command');
+const {App} = require('../app');
+
+const env = require('../environment').getEnvironment();
+
+const testClass = new Login();
+
+describe('Login Tests', () => {
+    let app;
+    before((done) => {
+        app = new App();
+        app.start().then(() => done());
+    });
+    it('Login with invalid token should return false', async () => {
+        const response = await testClass.login(undefined, '');
+        expect(response).to.be.eql(Responses.INVALID_TOKEN);
+    });
+    it('Login with valid token should return true', async () => {
+        const response = await testClass.login(
+            undefined,
+            env.TESTENV.GOOGLE_ACCESS_TOKEN);
+        if (env.TESTENV.OAUTH_TESTS) {
+            expect(response).to.be.eql(responses.OK);
+        }
+    });
+    after(() => {
+        app.stop();
+    });
+});

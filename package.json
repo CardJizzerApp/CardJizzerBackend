@@ -8,11 +8,10 @@
     "build": "gulp",
     "dev": "npm run setup && node ./src/server.js",
     "prod": "npm run setup && NODE_ENV='prod' node ./src/server.js",
-    "sub-dir-tests": "mocha './src/commands/*.spec.js' --timeout 7000",
-    "root-dir-tests": "mocha './src/*.spec.js' --timeout 7000",
-    "test": "npm run setup && npm run sub-dir-tests && npm run root-dir-tests",
+    "test": "npm run setup && mocha './src/**/*.spec.js' --timeout 5000 --exit",
     "lint": "npm run setup && eslint src",
-    "pre-commit": "npm run test && npm run lint"
+    "pre-commit": "npm run test && npm run lint",
+    "generate-readme": "node ./src/repository/readMeGenerator.js"
   },
   "author": "IJustDev",
   "license": "ISC",

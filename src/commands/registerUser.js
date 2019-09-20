@@ -1,15 +1,13 @@
-const {OAuth2Client} = require('google-auth-library');
-
-const {getEnvironment} = require('../environment');
 
 const {Command} = require('../command');
 
 const User = require('../models/user');
 
 const {ErrorCodeHelper, Responses} = require('../helper');
+const {isTokenValid} = require('../oAuthUtils');
+
 const ech = new ErrorCodeHelper();
 
-const env = getEnvironment();
 
 exports.registerUser = class extends Command {
     /**
@@ -35,42 +33,6 @@ exports.registerUser = class extends Command {
         return ech.sendResponse(response, null);
     }
     /**
-     * Fetches user profile data.
-     * @param {string} idToken
-     * @param {boolean} test
-     * @return {boolean}
-     */
-    async getUserProfile(idToken) {
-        try {
-            const clientId = test ?
-                env.GOOGLE_OAUTH_CLIENT_ID :
-                env.TESTENV.GOOGLE_OAUTH_CLIENT_ID;
-            const client = new OAuth2Client(
-                clientId
-            );
-            const ticket = await client.verifyIdToken({
-                audience: clientId,
-                idToken,
-            });
-            const payload = ticket.getPayload();
-            return payload;
-        } catch (err) {
-            throw new Error('Payload error');
-        }
-    }
-    /**
-     * Checks whether the token is valid or not.
-     * @param {string} idToken
-     */
-    async isTokenValid(idToken) {
-        try {
-            await this.getUserProfile(idToken);
-            return true;
-        } catch (err) {
-            return false;
-        }
-    }
-    /**
      * Register a user
      * @param {
      *  {username: string, password: string, idToken: string}
@@ -79,11 +41,14 @@ exports.registerUser = class extends Command {
      */
     async registerUser(userObject) {
         const {username, password, idToken} = userObject;
-        const validToken = await this.isTokenValid(idToken);
+        const validToken = await isTokenValid(idToken);
         if (!validToken) {
             return false;
         }
-        await User.create({idToken, password, username}, (err, response) => {
+        await User.create({idToken, password, username}, (err) => {
+            if (err !== null) {
+                return false;
+            }
             return true;
         });
     }
