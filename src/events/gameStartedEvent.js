@@ -5,14 +5,10 @@ const ech = new ErrorCodeHelper();
 
 exports.GameStartedEvent = class extends Event {
     /**
-     *
      * @param {Game} game
      */
     trigger(game) {
-        for (let i = 0; i !== game.players.length; i++) {
-            const player = game.players[i];
-            const websocket = player.websocket;
-            websocket.send(ech.sendResponse(Responses.GAME_STARTED, null));
-        }
+        this.sendToGameMembers(game,
+            ech.sendResponse(Responses.GAME_STARTED, null));
     }
 };

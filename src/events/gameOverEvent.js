@@ -10,10 +10,7 @@ exports.GameOverEvent = class extends Event {
      * @param {string} winnerUUID
      */
     trigger(game, winnerUUID) {
-        for (let i = 0; i !== game.players.length; i++) {
-            const player = game.players[i];
-            const websocket = player.websocket;
-            websocket.send(ech.sendResponse(Responses.GAME_OVER, winnerUUID));
-        }
+        this.sendToGameMembers(game,
+            ech.sendResponse(Responses.GAME_OVER, winnerUUID));
     }
 };

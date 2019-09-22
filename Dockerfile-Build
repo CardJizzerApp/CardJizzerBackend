@@ -1,0 +1,15 @@
+FROM node:8.16.1-alpine
+
+ARG WORK_DIR=/usr/local/bin/cardjizzer/backend
+
+RUN mkdir -p WORK_DIR
+
+COPY . $WORK_DIR
+
+WORKDIR $WORK_DIR
+
+RUN apk --no-cache update \
+    && apk --no-cache upgrade \
+    && apk add 'bash' \
+    && npm install --save-prod \
+    && chown -R node:node $WORK_DIR \

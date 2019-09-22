@@ -9,10 +9,7 @@ exports.CardReceivedEvent = class extends Event {
      * @param {any} card
      */
     trigger(game, card) {
-        for (let i = 0; i !== game.players.length; i++) {
-            const player = game.players[i];
-            const websocket = player.websocket;
-            websocket.send(ech.sendResponse(Responses.CARD_RECEIVED, card));
-        }
+        this.sendToGameMembers(game,
+            ech.sendResponse(Responses.CARD_RECEIVED, card));
     }
 };

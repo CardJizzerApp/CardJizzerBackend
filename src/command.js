@@ -50,6 +50,37 @@ exports.Command = class {
             });
         });
     }
+    /**
+     * Check if user is logged in
+     * @param {Websocket} ws
+     * @param {boolean} sendMessage
+     * @return {boolean}
+     */
+    isUserLoggedIn(ws, sendMessage) {
+        const player = getPlayerByUUID(ws.uuid);
+        if (player === undefined) {
+            if (sendMessage) {
+                ws.send(ech.sendResponse(Responses.NOT_LOGGED_IN, null));
+            }
+            return false;
+        }
+        return true;
+    }
+    /**
+     * @param {string} gameId
+     * @param {boolean} sendMessage
+     * @return {boolean}
+     */
+    isInGame(gameId, sendMessage) {
+        const game = getGameByUUID(gameId);
+        if (game === undefined || game.state === GameState.STOPPED) {
+            if (sendMessage) {
+                ws.send(ech.sendResponse(Responses.GAME_NOT_FOUND, null));
+            }
+            return false;
+        }
+        return true;
+    }
 };
 
 const {createGame} = require('./commands/createGame');
