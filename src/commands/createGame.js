@@ -32,10 +32,11 @@ class CreateGame extends Command {
      * @return {string}
      */
     run(args, ws) {
-        const player = getPlayerByUUID(ws.uuid);
-        if (player === undefined) {
-            return ech.sendResponse(Responses.NOT_LOGGED_IN, null);
+        if (!this.isUserLoggedIn(ws, true)) return;
+        if (this.isInGame(ws, false)) {
+            return ech.sendResponse(Responses.ALREADY_INGAME, null);
         }
+        const player = getPlayerByUUID(ws.uuid);
         const {maxplayers, deckids, password, pointstowin,
             maxroundtime, gametitle} = args;
         const game = new Game(

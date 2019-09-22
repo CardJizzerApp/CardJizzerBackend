@@ -20,15 +20,12 @@ exports.getPoints = class extends Command {
      * @return {string}
      */
     run(args, ws) {
+        if (!this.isUserLoggedIn(ws, true)) return;
         const player = getPlayerByUUID(ws.uuid);
-        if (player === undefined) {
-            return ech.sendResponse(Responses.NOT_LOGGED_IN, null);
-        }
-        const game = getGameByUUID(player.currentGameUUID);
-        if (game === undefined) {
-            return ech.sendResponse(Responses.NOT_INGAME, null);
-        }
-        return ech.sendResponse(Responses.OK, game.scoreboard);
+
+        if (!this.isGameInProgress(player.currentGameUUID, true)) return;
+        return ech.sendResponse(Responses.OK,
+            getGameByUUID(player.currentGameUUID).scoreboard);
     }
 };
 

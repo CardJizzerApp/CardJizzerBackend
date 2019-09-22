@@ -2,6 +2,13 @@ const allCommands = [];
 
 const {Dependencies} = require('./dependencyHandler');
 
+const {getPlayerByUUID} = require('./player');
+const {getGameByUUID, GameState} = require('./game');
+
+const {ErrorCodeHelper, Responses} = require('./helper');
+
+const ech = new ErrorCodeHelper();
+
 exports.Command = class {
     /**
      * @param {string} commandname
@@ -71,11 +78,27 @@ exports.Command = class {
      * @param {boolean} sendMessage
      * @return {boolean}
      */
-    isInGame(gameId, sendMessage) {
+    isGameInProgress(gameId, sendMessage) {
         const game = getGameByUUID(gameId);
         if (game === undefined || game.state === GameState.STOPPED) {
             if (sendMessage) {
                 ws.send(ech.sendResponse(Responses.GAME_NOT_FOUND, null));
+            }
+            return false;
+        }
+        return true;
+    }
+    /**
+     * @param {Websocket} ws
+     * @param {boolean} sendMessage
+     * @return {boolean}
+     */
+    isInGame(ws, sendMessage) {
+        if (!this.isUserLoggedIn(ws, true)) return;
+        const game = getGameByUUID(getPlayerByUUID(ws.uuid).currentGameUUID);
+        if (game === undefined || game.state == GameState.STOPPED) {
+            if (sendMessage) {
+                ws.send(ech.sendResponse(Responses.NOT_INGAME, null));
             }
             return false;
         }

@@ -20,24 +20,14 @@ exports.leave = class extends Command {
      * @return {string}
      */
     run(args, ws) {
+        if (!this.isUserLoggedIn(ws, true)) return;
         const player = getPlayerByUUID(ws.uuid);
-        if (player === undefined) {
-            return ech.sendResponse(Responses.NOT_LOGGED_IN, null);
-        }
-        const game = getGameByUUID(player.currentGameUUID);
-        if (game === undefined) {
-            return ech.sendResponse(Responses.NOT_INGAME, null);
-        }
-        if (game.removeFromgame(player)) {
-            return ech.sendResponse(Responses.OK, null);
-        }
-        return ech.sendResponse(Responses.NOT_INGAME);
-    }
-};
 
-exports.addPoint = function(uuid) {
-    if (scoreboard[uuid] === undefined) {
-        return scoreboard[uuid] = 1;
+        if (!this.isGameInProgress(player.currentGameUUID, true)) return;
+        const game = getGameByUUID(player.currentGameUUID);
+        const success = game.removeFromGame(player);
+        return success ?
+            ech.sendResponse(Responses.OK, null) :
+            ech.sendResponse(Responses.NOT_INGAME);
     }
-    return scoreboard[uuid] = scoreboard[uuid] + 1;
 };

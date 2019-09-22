@@ -1,5 +1,5 @@
 const {Command} = require('../command');
-const {getGameByUUID, GameState} = require('../game');
+const {getGameByUUID} = require('../game');
 const {getPlayerByUUID} = require('../player');
 const {phaseState} = require('../round');
 
@@ -24,14 +24,12 @@ exports.playCard = class extends Command {
      */
     run(args, ws) {
         const cardUUID = args.cardid;
+        if (!this.isUserLoggedIn(ws, true)) return;
         const player = getPlayerByUUID(ws.uuid);
-        if (player === undefined) {
-            return ech.sendResponse(Responses.NOT_LOGGED_IN, null);
-        }
+
+        if (!this.isGameInProgress(player.currentGameUUID, true)) return;
         const game = getGameByUUID(player.currentGameUUID);
-        if (game === undefined || game.state !== GameState.INGAME) {
-            return ech.sendResponse(Responses.NOT_INGAME, null);
-        }
+
         const round = game.round;
         if (round.phase === phaseState.SelectCard) {
             return ech.sendResponse(Responses.PICK_PHASE_OVER, null);

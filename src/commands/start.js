@@ -17,15 +17,10 @@ exports.start = class extends Command {
      * @param {Websocket} ws
      */
     async run(args, ws) {
+        if (!this.isInGame(ws, true)) return;
         const player = getPlayerByUUID(ws.uuid);
-        if (player === undefined) {
-            return ech.sendResponse(Responses.NOT_LOGGED_IN, null);
-        }
-        if (player.currentGameUUID === -1) {
-            return ech.sendResponse(Responses.NOT_INGAME, null);
-        }
         const game = getGameByUUID(player.currentGameUUID);
-        if (game === undefined || game.state !== GameState.LOBBY) {
+        if (game.state !== GameState.LOBBY) {
             return ech.sendResponse(Responses.GAME_ALREADY_INGAME, null);
         }
         return game.start().then(() => {

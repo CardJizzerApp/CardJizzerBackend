@@ -2,7 +2,7 @@ const {Command} = require('../command');
 
 const {ErrorCodeHelper, Responses} = require('../helper');
 
-const {getGameByUUID, GameState} = require('../game');
+const {getGameByUUID} = require('../game');
 const {getPlayerByUUID} = require('../player');
 
 const {RoundStoppedEvent} = require('../events/roundStoppedEvent');
@@ -22,44 +22,53 @@ exports.pickCard = class extends Command {
      * @return {string}
      */
     run(args, ws) {
+        const cardUUID = args.cardid;
+        if (!this.isUserLoggedIn(ws, true)) return;
         const player = getPlayerByUUID(ws.uuid);
-        const carduuid = args.cardid;
-        if (player === undefined) {
-            return ech.sendResponse(Responses.NOT_LOGGED_IN, null);
-        }
+
+        if (!this.isGameInProgress(player.currentGameUUID, true)) return;
         const game = getGameByUUID(player.currentGameUUID);
-        if (player.currentGameUUID === -1 ||
-            game === undefined || game.state !== GameState.INGAME) {
-            return ech.sendResponse(Responses.NOT_INGAME, null);
-        }
+
         if (game.round.cardJizzer.uuid !== player.uuid) {
             return ech.sendResponse(Responses.NOT_CARD_JIZZER, null);
         }
-        return this.pickCard(game, carduuid);
+        return this.pickCard(game, cardUUID);
     }
     /**
      * @param {Game} game
-     * @param {string} carduuid
+     * @param {string} cardUUID
      * @return {string}
      */
-    pickCard(game, carduuid) {
-        const keys = Object.keys(game.round.allCards);
-        for (let i = 0; i !== keys.length; i++) {
-            const playerUUID = keys[i];
-            for (let j = 0; j !== game.round.allCards[playerUUID].length; j++) {
-                const card = game.round.allCards[playerUUID][j];
-                if (card.uuid === carduuid) {
-                    for (let x = 0; x !== game.players.length; x++) {
-                        if (game.players[x].uuid === playerUUID) {
-                            new RoundStoppedEvent().trigger(game,
-                                game.players[x]);
-                            game.nextRound(playerUUID);
-                            return ech.sendResponse(Responses.OK, null);
-                        }
-                    }
-                }
-            }
+    pickCard(game, cardUUID) {
+        try {
+            const player = this.getPlayerOfCard(game, cardUUID);
+            new RoundStoppedEvent().trigger(game,
+                player);
+            game.nextRound(player.uuid);
+            return ech.sendResponse(Responses.OK, null);
+        } catch (err) {
+            console.log(err);
             return ech.sendResponse(Responses.CARD_COULD_NOT_BE_PICKED, null);
         }
+    }
+    /* eslint-disable valid-jsdoc */
+    /**
+     * Returns the player of a card.
+     * @param {Game} game
+     * @param {string} cardUUID
+     * @return {string} playerUUID
+     */
+    getPlayerOfCard(game, cardUUID) {
+        const keys = Object.keys(game.round.allCards);
+        let player = undefined;
+        keys.forEach((playerUUID) => {
+            const cardsPlayedByPlayer = game.round.allCards[playerUUID];
+            cardsPlayedByPlayer.forEach((card) => {
+                if (card.uuid === cardUUID) {
+                    player = getPlayerByUUID(playerUUID);
+                }
+            });
+        });
+        return player;
     }
 };

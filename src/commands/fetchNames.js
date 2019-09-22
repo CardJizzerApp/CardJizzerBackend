@@ -18,19 +18,16 @@ exports.fetchNames = class extends Command {
      * @return {string}
      */
     run(args, ws) {
+        if (!this.isUserLoggedIn(ws, true)) return;
         const player = getPlayerByUUID(ws.uuid);
-        if (player === undefined) {
-            return ech.sendResponse(Responses.NOT_LOGGED_IN, null);
-        }
+
+        if (!this.isGameInProgress(player.currentGameUUID, true)) return;
         const game = getGameByUUID(ws.uuid);
-        if (game === undefined) {
-            return ech.sendResponse(Responses.NOT_INGAME, null);
-        }
+
         const usernames = {};
-        for (let i = 0; i !== game.players; i++) {
-            const playerI = game.players[i];
-            usernames[playerI.uuid] = playerI.username;
-        }
+        game.players.forEach((queryPlayer) => {
+            usernames[queryPlayer.uuid] = usernames[queryPlayer.username];
+        });
         return ech.sendResponse(Responses.OK, usernames);
     }
 };

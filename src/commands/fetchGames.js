@@ -19,10 +19,9 @@ exports.fetchGames = class extends Command {
      */
     run(args) {
         const allGamesToServe = [];
-        for (let i = 0; i !== allGames.length; i++) {
-            const game = allGames[i];
+        allGames.forEach((game) => {
             allGamesToServe.push(game.toJSON());
-        }
+        });
         return ech.sendResponse(Responses.OK, allGamesToServe);
     }
 };
