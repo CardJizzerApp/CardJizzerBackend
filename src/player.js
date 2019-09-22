@@ -26,31 +26,43 @@ const player = class {
         allUsers.push(this);
     }
     /**
-     * @param {string} carduuid
+     * @param {string} cardUUID
      * @return {boolean} succeed
      */
-    playCard(carduuid) {
+    playCard(cardUUID) {
         if (this.currentGameUUID === -1) {
             return false;
         }
-        const game = getGameByUUID(this.currentGameUUID);
-        if (game === undefined || game.state !== GameState.INGAME) {
-            return false;
-        }
-        const hand = game.getCardsOfPlayer(this);
-        for (let i = 0; i !== hand.length; i++) {
-            const card = hand[i];
-            if (card.uuid === carduuid) {
-                if (game.round.playCard(this, card)) {
-                    game.playerCardStacks[this.uuid] =
-                        removeItem(game.playerCardStacks[this.uuid], i);
-                    return true;
-                }
+        if (this.hasCard(cardUUID)) {
+            const card = hand[cardUUID];
+            if (game.round.playCard(this, card)) {
+                game.playerCardStacks = removeItem(game.playerCardStacks)
             }
         }
+        this.hasCard(cardUUID, (game, hand) => {
+            indexOfCard = game.playerCardStacks[this.uuid];
+            game.playerCardStacks[this.uuid];
+        });
         return false;
     }
-
+    /**
+     * Checks whether the user has got a card or not.
+     * @param {string} cardUUID
+     * @param {function (game, hand)} cb
+     * @return {boolean}
+     */
+    hasCard(cardUUID, cb) {
+        const game = getGameByUUID(this.currentGameUUID);
+        const hand = game.getCardsOfPlayer(this);
+        let hasCard = false;
+        hand.forEach((card) => {
+            if (card.uuid === cardUUID) {
+                hasCard = true;
+            }
+        });
+        cb(game, hand);
+        return hasCard;
+    }
     /**
      * @param {string} gameUUID
      * @return {boolean}

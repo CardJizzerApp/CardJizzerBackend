@@ -60,49 +60,48 @@ exports.Command = class {
     /**
      * Check if user is logged in
      * @param {Websocket} ws
-     * @param {boolean} sendMessage
+     * @param {function (player, err)} cb
      * @return {boolean}
      */
-    isUserLoggedIn(ws, sendMessage) {
+    isUserLoggedIn(ws, cb) {
         const player = getPlayerByUUID(ws.uuid);
         if (player === undefined) {
-            if (sendMessage) {
-                ws.send(ech.sendResponse(Responses.NOT_LOGGED_IN, null));
-            }
+            cb(undefined, new Error('User not logged in'));
             return false;
         }
+        cb(player, undefined);
         return true;
     }
     /**
      * @param {string} gameId
-     * @param {boolean} sendMessage
+     * @param {function (game, err)} cb
      * @return {boolean}
      */
-    isGameInProgress(gameId, sendMessage) {
+    isGameInProgress(gameId, cb) {
         const game = getGameByUUID(gameId);
         if (game === undefined || game.state === GameState.STOPPED) {
-            if (sendMessage) {
-                ws.send(ech.sendResponse(Responses.GAME_NOT_FOUND, null));
-            }
+            cb(undefined, new Error('User not ingame.'));
             return false;
         }
+        cb(game, undefined);
         return true;
     }
     /**
      * @param {Websocket} ws
-     * @param {boolean} sendMessage
+     * @param {function (game, player, err)} cb
      * @return {boolean}
      */
-    isInGame(ws, sendMessage) {
-        if (!this.isUserLoggedIn(ws, true)) return;
+    isInGame(ws, cb) {
+        const player = getPlayerByUUID(ws.uuid);
+        this.isUserLoggedIn(ws, (game, (player) => {
+
+        }));
         const game = getGameByUUID(getPlayerByUUID(ws.uuid).currentGameUUID);
-        if (game === undefined || game.state == GameState.STOPPED) {
-            if (sendMessage) {
-                ws.send(ech.sendResponse(Responses.NOT_INGAME, null));
-            }
+        if (game === undefined || game.state === GameState.STOPPED) {
             return false;
         }
-        return true;
+        cb(game, player);
+        return this.isGameInProgress(game.id, true);
     }
 };
 
