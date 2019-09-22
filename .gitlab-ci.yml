@@ -34,14 +34,15 @@ stages:
 build_base_image:
     stage: build
     image: docker:stable-git
-    services: docker:stable-dind
+    services: 
+        - docker-stable-dind
     script:
         - docker login -u $docker_username -p $docker_pw
-        - docker build -t $IMAGE_NAME -f ./Dockerfile-Base .
+        - docker build -t ${IMAGE_NAME}-build -f ./Dockerfile-Build .
         - docker push $IMAGE_NAME
     only:
         refs:
-            /^feature-.*/
+            - /^feature-.*/
         changes:
             - Dockerfile-Build
             - package.json
@@ -56,4 +57,3 @@ build:
     stage: build
     script:
         - npm run build
-    
