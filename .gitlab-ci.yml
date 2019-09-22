@@ -47,13 +47,14 @@ build_base_image:
             - Dockerfile-Build
             - package.json
 
-image: $IMAGE_NAME
 test:
+    image: $IMAGE_NAME
     stage: test
     script:
         - npm run test
 
 build:
+    image: $IMAGE_NAME
     stage: build
     script:
         - npm run build
