@@ -48,13 +48,13 @@ build_base_image:
             - package.json
 
 test:
-    image: $IMAGE_NAME
+    image: ${IMAGE_NAME}-build
     stage: test
     script:
         - npm run test
 
 build:
-    image: $IMAGE_NAME
+    image: ${IMAGE_NAME}-build
     stage: build
     script:
         - npm run build
