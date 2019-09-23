@@ -89,19 +89,21 @@ exports.Command = class {
     /**
      * @param {Websocket} ws
      * @param {function (game, player, err)} cb
-     * @return {boolean}
+     * @return {string}
      */
     isInGame(ws, cb) {
-        const player = getPlayerByUUID(ws.uuid);
-        this.isUserLoggedIn(ws, (game, (player) => {
-
-        }));
-        const game = getGameByUUID(getPlayerByUUID(ws.uuid).currentGameUUID);
-        if (game === undefined || game.state === GameState.STOPPED) {
-            return false;
-        }
-        cb(game, player);
-        return this.isGameInProgress(game.id, true);
+        return this.isUserLoggedIn(ws, (player, err) => {
+            if (err !== undefined) {
+                cb(undefined, undefined, new Error('User not logged in.'));
+                return ech.sendResponse(Responses.NOT_LOGGED_IN, null);
+            }
+            const game = getGameByUUID(player.currentGameUUID);
+            if (game === undefined || game.state === GameState.STOPPED) {
+                cb(undefined, undefined, new Error('User not ingame.'));
+                return ech.sendResponse(Responses.NOT_INGAME, null);
+            }
+            cb(game, player);
+        });
     }
 };
 

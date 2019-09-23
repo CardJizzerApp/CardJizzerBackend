@@ -29,30 +29,29 @@ class CreateGame extends Command {
     /**
      * @param {string[]} args
      * @param {Websocket} ws
-     * @return {string}
      */
     run(args, ws) {
-        if (!this.isUserLoggedIn(ws, true)) return;
-        if (this.isInGame(ws, false)) {
-            return ech.sendResponse(Responses.ALREADY_INGAME, null);
-        }
-        const player = getPlayerByUUID(ws.uuid);
         const {maxplayers, deckids, password, pointstowin,
             maxroundtime, gametitle} = args;
-        const game = new Game(
-            maxplayers,
-            deckids,
-            password,
-            pointstowin,
-            maxroundtime,
-            gametitle
-        );
-        player.join(game.id);
-        new GameChangedEvent().trigger(
-            ChangeAction.GAME_CREATED,
-            game.toJSON()
-        );
-        return ech.sendResponse(Responses.OK, game.toJSON());
+        this.isUserLoggedIn(ws, (player, err) => {
+            if (err !== undefined) {
+                return;
+            }
+            const game = new Game(
+                maxplayers,
+                deckids,
+                password,
+                pointstowin,
+                maxroundtime,
+                gametitle
+            );
+            player.join(game.id);
+            new GameChangedEvent().trigger(
+                ChangeAction.GAME_CREATED,
+                game.toJSON()
+            );
+            return ech.sendResponse(Responses.OK, game.toJSON());
+        });
     }
 }
 
