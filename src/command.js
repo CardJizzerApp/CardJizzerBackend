@@ -66,11 +66,9 @@ exports.Command = class {
     isUserLoggedIn(ws, cb) {
         const player = getPlayerByUUID(ws.uuid);
         if (player === undefined) {
-            cb(undefined, new Error('User not logged in'));
-            return false;
+            return cb(undefined, new Error('User not logged in'));
         }
-        cb(player, undefined);
-        return true;
+        return cb(player, undefined);
     }
     /**
      * @param {string} gameId
@@ -85,6 +83,13 @@ exports.Command = class {
         }
         cb(game, undefined);
         return true;
+    }
+    /**
+     * @param {string} gameId
+     * @param {function(game)} cb
+     */
+    getGame(gameId, cb) {
+        cb(getGameByUUID(gameId));
     }
     /**
      * @param {Websocket} ws
@@ -102,7 +107,7 @@ exports.Command = class {
                 cb(undefined, undefined, new Error('User not ingame.'));
                 return ech.sendResponse(Responses.NOT_INGAME, null);
             }
-            cb(game, player);
+            return cb(game, player);
         });
     }
 };

@@ -18,6 +18,7 @@ function sendCommandAndExpect(testObject, expectedOutput) {
         const {websocket, commandObject} = testObject;
         websocket.once('message', (msg) => {
             const response = JSON.parse(msg);
+            console.log(response);
             expect(response.errorCode).to.be.oneOf(expectedOutput.errorCode);
             if (expectedOutput.jsonData !== undefined) {
                 expect(response.errorCode).to.be.eql(expectedOutput.jsonData);
