@@ -27,7 +27,6 @@ exports.join = class extends Command {
                     return ech.sendResponse(Responses.ALREADY_INGAME);
                 }
                 const game = getGameByUUID(gameUUID);
-                console.log(game);
                 const success = player.join(gameUUID);
                 if (game.state === GameState.INGAME) {
                     return ech.sendResponse(Responses.ALREADY_INGAME, null);

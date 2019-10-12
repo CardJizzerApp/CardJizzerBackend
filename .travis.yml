@@ -1,5 +1,15 @@
 language: node_js
 
+node_js:
+  - 10
+
+services:
+  - docker
+
+before_install:
+  - docker run -d -p 27017-27019:27017-27019 --name mongodb mongo:4.0.4
+  - docker run -d -p 6379:6379 --name redis redis
+  
 install:
   - npm i
 

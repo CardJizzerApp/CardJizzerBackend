@@ -1,3 +1,5 @@
+require('dotenv').config();
+
 module.exports.getEnvironment = () => {
     return process.env.NODE_ENV === 'prod' ?
         this.ProductionEnvironment :
@@ -15,16 +17,14 @@ module.exports.ProductionEnvironment = {
     REDIS_PORT: 6379,
     SENTRYDSN: process.env.SENTRYDSN,
     TESTENV: {
-        GOOGLE_OAUTH_CLIENT_ID:
-            '407408718192.apps.googleusercontent.com',
+        GOOGLE_OAUTH_CLIENT_ID: process.env.GOOGLE_OAUTH_CLIENT_ID,
         OAUTH_TESTS: false,
     },
     TYPE: 'prod',
 };
 
 module.exports.DevelopmentEnvironment = {
-    GOOGLE_OAUTH_CLIENT_ID:
-        '407408718192.apps.googleusercontent.com',
+    GOOGLE_OAUTH_CLIENT_ID: process.env.GOOGLE_OAUTH_CLIENT_ID,
     MONGO_DATABASE: 'cardjizzer-testdb',
     MONGO_HOST: process.env.MONGO_HOST,
     MONGO_PORT: process.env.MONGO_PORT,

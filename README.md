@@ -7,6 +7,8 @@
 <div align="center">
     
 [![Build Status](https://travis-ci.com/CardJizzerApp/CardJizzerBackend.svg?branch=master)](https://travis-ci.com/CardJizzerApp/CardJizzerBackend)
+[![Gitter](https://badges.gitter.im/CardJizzerApp/community.svg)](https://gitter.im/CardJizzerApp/community?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge)
+[![Maintainability](https://api.codeclimate.com/v1/badges/dc12b4b5b1070a4b63e7/maintainability)](https://codeclimate.com/github/CardJizzerApp/CardJizzerBackend/maintainability)
 
 </div>
 

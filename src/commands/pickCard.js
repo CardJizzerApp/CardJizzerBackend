@@ -47,7 +47,6 @@ exports.pickCard = class extends Command {
             game.nextRound(player.uuid);
             return ech.sendResponse(Responses.OK, null);
         } catch (err) {
-            console.log(err);
             return ech.sendResponse(Responses.CARD_COULD_NOT_BE_PICKED, null);
         }
     }

@@ -38,7 +38,6 @@ const player = class {
                 return false;
             }
             const card = hand.filter((a) => a.uuid === cardUUID);
-            console.log(card);
             return game.round.playCard(this, card);
         });
         return false;

@@ -149,8 +149,6 @@ const Game = class {
                     deck.populatedPromise.then(() => {
                         this.addCardsFromDeck(deck, deckId);
                     });
-                }).catch((error) => {
-                    console.log(error);
                 });
             } else {
                 getDeckFromCache(deckId);
