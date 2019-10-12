@@ -12,8 +12,8 @@
 
 <div align="center">
 
-[What is this](#what-is-this?) | 
-[Motivation](#motivation) | 
+[What is this](#what-is-this?-:question:) | 
+[Motivation](#motivation-:100:) | 
 [Running locally](#running-locally) | 
 [Contributing](#contributing)
 
