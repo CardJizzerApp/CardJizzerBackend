@@ -10,11 +10,10 @@
     "prod": "npm run setup && NODE_ENV='prod' node ./src/server.js",
     "test": "npm run setup && mocha './src/**/*.spec.js' --timeout 5000 --exit",
     "lint": "npm run setup && eslint src",
-    "pre-commit": "npm run test && npm run lint",
-    "generate-readme": "node ./src/repository/readMeGenerator.js"
+    "pre-commit": "npm run test && npm run lint"
   },
   "author": "IJustDev",
-  "license": "ISC",
+  "license": "GNU GPLv3",
   "dependencies": {
     "@sentry/node": "^5.6.2",
     "axios": "^0.19.0",

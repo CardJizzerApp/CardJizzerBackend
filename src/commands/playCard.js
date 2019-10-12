@@ -1,6 +1,4 @@
 const {Command} = require('../command');
-const {getGameByUUID} = require('../game');
-const {getPlayerByUUID} = require('../player');
 const {phaseState} = require('../round');
 
 const {PlayerPlayedCardEvent} = require('../events/playerPlayedCardEvent');
@@ -24,23 +22,19 @@ exports.playCard = class extends Command {
      */
     run(args, ws) {
         const cardUUID = args.cardid;
-        if (!this.isUserLoggedIn(ws, true)) return;
-        const player = getPlayerByUUID(ws.uuid);
-
-        if (!this.isGameInProgress(player.currentGameUUID, true)) return;
-        const game = getGameByUUID(player.currentGameUUID);
-
-        const round = game.round;
-        if (round.phase === phaseState.SelectCard) {
-            return ech.sendResponse(Responses.PICK_PHASE_OVER, null);
-        }
-        if (player.playCard(cardUUID)) {
-            new PlayerPlayedCardEvent().trigger(game, player);
-            if (game.round.hasEverybodyPicked()) {
-                new EveryBodyPickedEvent().trigger(game);
+        return this.isInGame(ws, (game, player, err) => {
+            const round = game.round;
+            if (round.phase === phaseState.SelectCard) {
+                return ech.sendResponse(Responses.PICK_PHASE_OVER, null);
             }
-            return ech.sendResponse(Responses.OK, null);
-        }
-        return ech.sendResponse(Responses.CARD_COULD_NOT_BE_PLAYED, null);
+            if (player.playCard(cardUUID)) {
+                new PlayerPlayedCardEvent().trigger(game, player);
+                if (game.round.hasEverybodyPicked()) {
+                    new EveryBodyPickedEvent().trigger(game);
+                }
+                return ech.sendResponse(Responses.OK, null);
+            }
+            return ech.sendResponse(Responses.CARD_COULD_NOT_BE_PLAYED, null);
+        });
     }
 };

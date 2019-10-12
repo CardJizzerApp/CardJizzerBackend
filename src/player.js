@@ -2,7 +2,7 @@ const {v4} = require('uuid');
 
 const {GameChangedEvent, ChangeAction} = require('./events/gameChangedEvent');
 
-const {getGameByUUID, GameState} = require('./game');
+const {getGameByUUID} = require('./game');
 const {allUsers} = require('./userUtils');
 
 const player = class {
@@ -33,15 +33,13 @@ const player = class {
         if (this.currentGameUUID === -1) {
             return false;
         }
-        if (this.hasCard(cardUUID)) {
-            const card = hand[cardUUID];
-            if (game.round.playCard(this, card)) {
-                game.playerCardStacks = removeItem(game.playerCardStacks)
-            }
-        }
         this.hasCard(cardUUID, (game, hand) => {
-            indexOfCard = game.playerCardStacks[this.uuid];
-            game.playerCardStacks[this.uuid];
+            if (game === undefined || hand === undefined) {
+                return false;
+            }
+            const card = hand.filter((a) => a.uuid === cardUUID);
+            console.log(card);
+            return game.round.playCard(this, card);
         });
         return false;
     }

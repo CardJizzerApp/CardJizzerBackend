@@ -1,5 +1,4 @@
 const {Command} = require('../command');
-const {getPlayerByUUID} = require('../player');
 const {Game} = require('../game');
 
 const {ErrorCodeHelper, Responses} = require('../helper');

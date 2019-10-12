@@ -37,12 +37,14 @@ module.exports.Round = class {
      */
     playCard(player, card) {
         const playerUUID = player.uuid;
-        if (this.cardJizzer.uuid === playerUUID) return false;
         if (this.allCards[playerUUID] === undefined) {
             this.allCards[playerUUID] = [];
         }
-        if (this.allCards[playerUUID].length >= this.cardsAmount) return false;
-        this.allCards[playerUUID].push(card);
+        const playerCards = this.allCards[playerUUID];
+        if (this.cardJizzer.uuid === playerUUID) return false;
+        if (playerCards.length < this.cardsAmount) {
+            playerCards.push(card);
+        }
         if (this.hasEverybodyPicked()) {
             this.phase = phaseState.SelectCard;
         }

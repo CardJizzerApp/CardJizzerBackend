@@ -1,7 +1,5 @@
 #!/bin/bash
 
-npm run generate-readme
-
 npm run pre-commit 2> /dev/null
 
 

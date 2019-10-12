@@ -73,16 +73,14 @@ exports.Command = class {
     /**
      * @param {string} gameId
      * @param {function (game, err)} cb
-     * @return {boolean}
+     * @return {string}
      */
     isGameInProgress(gameId, cb) {
         const game = getGameByUUID(gameId);
         if (game === undefined || game.state === GameState.STOPPED) {
-            cb(undefined, new Error('User not ingame.'));
-            return false;
+            return cb(undefined, new Error('User not ingame.'));
         }
-        cb(game, undefined);
-        return true;
+        return cb(game, undefined);
     }
     /**
      * @param {string} gameId

@@ -30,8 +30,8 @@ module.exports.DevelopmentEnvironment = {
     MONGO_HOST: 'localhost',
     MONGO_PORT: 27017,
     PORT: 80,
-    REDIS_HOST: '192.168.99.100',
-    REDIS_PORT: 6379,
+    REDIS_HOST: process.env.REDIS_HOST,
+    REDIS_PORT: process.env.REDIS_PORT,
     TESTENV: this.ProductionEnvironment.TESTENV,
     TYPE: 'dev',
 };

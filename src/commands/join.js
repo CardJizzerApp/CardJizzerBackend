@@ -21,21 +21,21 @@ exports.join = class extends Command {
      */
     run(args, ws) {
         const gameUUID = args.gameid;
-        return this.isInGame(ws, (_, player, err) => {
-            if (player === undefined) {
-                return ech.sendResponse(Responses.NOT_LOGGED_IN);
-            }
-            if (err === undefined) {
-                return ech.sendResponse(Responses.COULD_NOT_JOIN);
-            }
-            const game = getGameByUUID(gameUUID);
-            const success = player.join(gameUUID);
-            if (game.state === GameState.INGAME) {
-                return ech.sendResponse(Responses.ALREADY_INGAME, null);
-            }
-            return success ?
-                ech.sendResponse(Responses.OK, game.toJSON()) :
-                ech.sendResponse(Responses.COULD_NOT_JOIN, null);
+        return this.isUserLoggedIn(ws, (player) => {
+            return this.isGameInProgress(ws, (_, err) => {
+                if (err === undefined) {
+                    return ech.sendResponse(Responses.ALREADY_INGAME);
+                }
+                const game = getGameByUUID(gameUUID);
+                console.log(game);
+                const success = player.join(gameUUID);
+                if (game.state === GameState.INGAME) {
+                    return ech.sendResponse(Responses.ALREADY_INGAME, null);
+                }
+                return success ?
+                    ech.sendResponse(Responses.OK, game.toJSON()) :
+                    ech.sendResponse(Responses.COULD_NOT_JOIN, null);
+            });
         });
     }
     /**
