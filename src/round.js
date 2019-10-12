@@ -73,7 +73,7 @@ module.exports.Round = class {
     }
 
     /**
-     * @return {boolean} everbody picked
+     * @return {boolean} everybody picked
      */
     hasEverybodyPicked() {
         const shouldPicks = this.cardsAmount * (this.playerAmount - 1);
