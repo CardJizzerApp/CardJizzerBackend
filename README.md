@@ -7,6 +7,9 @@
 
 <div align="center">
     <!-- Badges here -->
+    
+[![Build Status](https://travis-ci.com/CardJizzerApp/CardJizzerBackend.svg?branch=master)](https://travis-ci.com/CardJizzerApp/CardJizzerBackend)
+
 </div>
 
 ## What Is Cards Against Humanity? And Why CardJizzer?
