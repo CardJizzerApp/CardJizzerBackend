@@ -14,6 +14,7 @@
 
 [What is this](#what-is-this?) | 
 [Motivation](#motivation) | 
+[Running locally](#running-locally) | 
 [Contributing](#contributing)
 
 </div>
@@ -43,6 +44,11 @@ Please follow [this][frontend] link for the frontend part of this project.
 ## Motivation :100:
 Why are we doing this? We want the future of games to be more transparent and modifiable for any developer.
 
+## Running locally
+If you want to run this server locally you need to
+- have a Redis and MongoDB server running
+
+The connection settings can be found in the `src/environment.js` file.
 
 ## Contributing
 Please refer to each project's style and [contribution guidelines](CONTRIBUTING.md) for submitting patches and additions. In general, we follow the "fork-and-pull" Git workflow.
