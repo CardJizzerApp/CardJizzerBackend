@@ -17,3 +17,8 @@ script:
   - npm run test
   - npm run lint
   - npm run build
+
+deploy:
+  provider: script
+  skip_cleanup: true
+  script: chmod +x .travis/deploy.sh && .travis/deploy.sh
