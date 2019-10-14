@@ -1,2 +1,11 @@
+# Package manager
 node_modules/
+
+# Editorconfig
+.vscode/
+
+# Project build
 dist/
+
+# Other
+package-lock.json

@@ -2,3 +2,4 @@
 !/src/
 !/*.json
 !/gulpfile.js
+!/.travis/
