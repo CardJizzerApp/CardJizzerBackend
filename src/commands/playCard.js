@@ -22,7 +22,7 @@ exports.playCard = class extends Command {
      */
     run(args, ws) {
         const cardUUID = args.cardid;
-        return this.isInGame(ws, (game, player, err) => {
+        return this.isInGame(ws, (game, player) => {
             const round = game.round;
             if (round.phase === phaseState.SelectCard) {
                 return ech.sendResponse(Responses.PICK_PHASE_OVER, null);

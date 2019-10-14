@@ -33,14 +33,17 @@ const player = class {
         if (this.currentGameUUID === -1) {
             return false;
         }
-        this.hasCard(cardUUID, (game, hand) => {
+        return this.hasCard(cardUUID, (game, hand) => {
             if (game === undefined || hand === undefined) {
                 return false;
             }
-            const card = hand.filter((a) => a.uuid === cardUUID);
-            return game.round.playCard(this, card);
+            const card = hand.filter((a) => a.uuid === cardUUID)[0];
+            if (card === undefined) {
+                return false;
+            }
+            game.round.playCard(this, card);
+            return true;
         });
-        return false;
     }
     /**
      * Checks whether the user has got a card or not.

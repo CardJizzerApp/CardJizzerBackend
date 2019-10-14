@@ -33,7 +33,7 @@ module.exports.Round = class {
     /**
      * @param {Player} player
      * @param {Card} card
-     * @return {boolean} succeed
+     * @return {void}
      */
     playCard(player, card) {
         const playerUUID = player.uuid;
@@ -48,7 +48,6 @@ module.exports.Round = class {
         if (this.hasEverybodyPicked()) {
             this.phase = phaseState.SelectCard;
         }
-        return true;
     }
 
     /**

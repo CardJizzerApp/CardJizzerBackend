@@ -2,7 +2,6 @@ const {Command} = require('../command');
 
 const {ErrorCodeHelper, Responses} = require('../helper');
 
-const {getGameByUUID} = require('../game');
 const {getPlayerByUUID} = require('../player');
 
 const {RoundStoppedEvent} = require('../events/roundStoppedEvent');
@@ -23,16 +22,12 @@ exports.pickCard = class extends Command {
      */
     run(args, ws) {
         const cardUUID = args.cardid;
-        if (!this.isUserLoggedIn(ws, true)) return;
-        const player = getPlayerByUUID(ws.uuid);
-
-        if (!this.isGameInProgress(player.currentGameUUID, true)) return;
-        const game = getGameByUUID(player.currentGameUUID);
-
-        if (game.round.cardJizzer.uuid !== player.uuid) {
-            return ech.sendResponse(Responses.NOT_CARD_JIZZER, null);
-        }
-        return this.pickCard(game, cardUUID);
+        return this.isInGame(ws, (game, player, err) => {
+            if (game.round.cardJizzer.uuid !== player.uuid) {
+                return ech.sendResponse(Responses.NOT_CARD_JIZZER, null);
+            }
+            return this.pickCard(game, cardUUID);
+        });
     }
     /**
      * @param {Game} game

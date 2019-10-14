@@ -22,3 +22,6 @@ deploy:
   provider: script
   skip_cleanup: true
   script: chmod +x .travis/deploy.sh && .travis/deploy.sh
+  on:
+    tags: true
+    all_branches: false
