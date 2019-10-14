@@ -1,21 +1,25 @@
-PACKAGE_VERSION=$(cat ./package.json \
-  | grep version \
-  | head -1 \
-  | awk -F: '{ print $2 }' \
-  | sed 's/[",]//g')
+#!/bin/bash
 
-CONTAINER_TAG=docker.pkg.github.com/$DOCKER_USERNAME/cardjizzer-backend:$PACKAGE_VERSION
+PACKAGE_VERSION=$(cat ./package.json | jq ".version" -r)
 
-function build {
-  docker login docker.pkg.github.com --username $DOCKER_USERNAME --password $DOCKER_PASSWORD
+ORGANIZATION=cardjizzerapp
+
+echo "Package ver: $PACKAGE_VERSION"
+
+CONTAINER_TAG="docker.pkg.github.com/$ORGANIZATION/cardjizzerbackend/server:$PACKAGE_VERSION"
+
+build () {
+  docker login docker.pkg.github.com --username "CardJizzerApp" --password $TOKEN
   docker build -t $CONTAINER_TAG .
   docker push $CONTAINER_TAG
 }
 
-function deployToServer {
+deployToServer () {
   ssh-keyscan -H $DEPLOY_IP >> ~/.ssh/known_Hosts
-  ssh $DEPLOY_USER@$DEPLOY_IP "docker run $CONTAINER_TAG"
+  ssh $DEPLOY_USER@$DEPLOY_IP "docker pull $CONTAINER_TAG"
 }
 
 build
+# deployToServer
 
+exit 0
