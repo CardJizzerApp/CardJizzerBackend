@@ -17,7 +17,6 @@
 [What is this](#what-is-this) | 
 [Motivation](#motivation) | 
 [Installation](#installation) | 
-[Running locally](#running-locally) | 
 [Contributing](#contributing)
 
 </div>
@@ -44,7 +43,7 @@ This repository is the backend part of the app. It will be deployed to our serve
 
 Please follow [this][frontend] link for the frontend part of this project.
 
-## Motivation :100:
+## Motivation
 Why are we doing this? We want the future of games to be more transparent and modifiable for any developer.
 
 ## Installation
@@ -107,6 +106,8 @@ $ npm i && npm run setup
 $ npm run test
 # Building
 $ npm run build
+# Development
+$ npm run dev
 ```
 
 ### Resolved your issue? Contribute!
