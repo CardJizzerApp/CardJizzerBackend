@@ -22,3 +22,8 @@ NOTE: The term `ws` is associated with `websocket` and `cb` the short form of `c
 
 `isInGame(ws, cb(game, player, err)) => cb()`
 
+
+### [_Back to table of contents_][index]
+
+
+[index]: ./index.md
