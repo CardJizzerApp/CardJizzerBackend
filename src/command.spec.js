@@ -6,7 +6,28 @@ const Ws = require('ws');
 const {App} = require('./app');
 const {allUsers} = require('./userUtils');
 
-const {sendCommandAndExpect} = require('./testUtils');
+/**
+ * @param {
+*  {websocket,
+*  commandObject: {command: string, params: {}}}} testObject
+* @param {{errorCode: any, jsonData: any}} expectedOutput
+* @return {Promise}
+*/
+function sendCommandAndExpect(testObject, expectedOutput) {
+    return new Promise((resolve) => {
+        const {websocket, commandObject} = testObject;
+        websocket.once('message', (msg) => {
+            const response = JSON.parse(msg);
+            expect(response.errorCode).to.be.oneOf(expectedOutput.errorCode);
+            if (expectedOutput.jsonData !== undefined) {
+                expect(response.errorCode).to.be.eql(expectedOutput.jsonData);
+            }
+            resolve(response);
+        });
+        websocket.send(JSON.stringify(commandObject));
+    });
+}
+module.exports.sendCommandAndExpect = sendCommandAndExpect;
 
 /* eslint-disable max-lines-per-function */
 describe('commandTests', () => {

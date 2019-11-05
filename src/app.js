@@ -137,7 +137,7 @@ exports.App = class App {
             }
             return command;
         } catch (Error) {
-            return undefined;
+            return Responses.COMMAND_NOT_FOUND;
         }
     }
     /**

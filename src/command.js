@@ -155,5 +155,6 @@ exports.FetchNames = fetchNames;
 exports.Login = login;
 
 exports.findCommand = function(commandname) {
-    return allCommands.filter((command) => command.commandname === commandname);
+    return allCommands.filter(
+        (command) => command.commandname === commandname)[0];
 };
