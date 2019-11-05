@@ -17,12 +17,6 @@ const player = class {
         this.username = username;
         this.currentGameUUID = -1;
         this.lastPing = new Date().getTime();
-        // TODO: Uncomment without failing tests.
-        // This.handle = setTimeout(() => {
-        //     If (new Date().getTime() - this.lastPing > 1000*15) {
-        //         ClearTimeout(this.handle);
-        //     }
-        // }, 1000);
         allUsers.push(this);
     }
     /**
@@ -37,7 +31,7 @@ const player = class {
             if (game === undefined || hand === undefined) {
                 return false;
             }
-            const card = hand.filter((a) => a.uuid === cardUUID)[0];
+            const card = hand.find((a) => a.uuid === cardUUID);
             if (card === undefined) {
                 return false;
             }
@@ -133,14 +127,7 @@ module.exports.Player = player;
  * @return {Player}
  */
 const getPlayerByUUID = function(uuid) {
-    for (let i = 0; i !== allUsers.length; i++) {
-        const player = allUsers[i];
-        const pUUID = player.uuid;
-        if (uuid === pUUID) {
-            return player;
-        }
-    }
-    return undefined;
+    return allUsers.find((user) => user.uuid === uuid);
 };
 module.exports.getPlayerByUUID = getPlayerByUUID;
 

@@ -18,18 +18,18 @@ exports.registerUser = class extends Command {
             'username',
             'password',
             'email',
-            'oauth_token',
-        ], false);
+            'idToken',
+        ], true);
     }
     /**
      * @param {string[]} args
      * @param {Websocket} ws
      * @return {string}
      */
-    run(args, ws) {
-        const response = this.registerUser(args) ?
+    async run(args, ws) {
+        const response = await this.registerUser(args) ?
             Responses.OK :
-            Responses.INVALID_JSON;
+            Responses.INVALID_TOKEN;
         return ech.sendResponse(response, null);
     }
     /**

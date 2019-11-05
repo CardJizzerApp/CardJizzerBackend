@@ -348,6 +348,6 @@ module.exports.getDeckFromCache = getDeckFromCache;
  * @return {Game}
  */
 const getGameByUUID = function(uuid) {
-    return allGames.filter((game) => game.id === uuid)[0];
+    return allGames.find((game) => game.id === uuid);
 };
 module.exports.getGameByUUID = getGameByUUID;

@@ -1,3 +1,6 @@
+/**
+* This is used for creating commands and events.
+ */
 package main
 
 import (

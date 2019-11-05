@@ -15,11 +15,13 @@ build () {
 }
 
 deployToServer () {
-  ssh-keyscan -H $DEPLOY_IP >> ~/.ssh/known_Hosts
-  ssh $DEPLOY_USER@$DEPLOY_IP "docker pull $CONTAINER_TAG"
+  echo $SSH_KEY > ~/.ssh/id_rsa
+  ssh-add ~/.ssh/id_rsa
+  ssh-keyscan -H $DEPLOY_IP >> ~/.ssh/known_hosts
+  ssh $DEPLOY_USER@$DEPLOY_IP "docker pull $CONTAINER_TAG \ echo 'asdf'"
 }
 
 build
-# deployToServer
+deployToServer
 
 exit 0
