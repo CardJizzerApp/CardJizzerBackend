@@ -10,7 +10,7 @@ exports.login = class extends Command {
      * Fetch names of all players in current game.
      */
     constructor() {
-        super('login', 0);
+        super('login', ['idToken']);
     }
     /**
      * @param {string[]} args
