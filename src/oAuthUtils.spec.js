@@ -13,12 +13,12 @@ describe('Token functions', () => {
                     env.TESTENV.GOOGLE_ACCESS_TOKEN);
                 expect(response).true;
             }
-        }
+        },
     );
     it(
         'Check token function with invalid token should return false',
         async () => {
             expect(await testClass.isTokenValid('notoken')).false;
-        }
+        },
     );
 });

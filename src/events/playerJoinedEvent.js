@@ -18,8 +18,8 @@ exports.PlayerJoinedEvent = class extends Event {
             websocket.send(
                 ech.sendResponse(
                     Responses.PLAYER_JOINED,
-                    {username: player.username, uuid: player.uuid}
-                )
+                    {username: player.username, uuid: player.uuid},
+                ),
             );
         }
     }

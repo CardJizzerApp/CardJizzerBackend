@@ -14,8 +14,8 @@ exports.EveryBodyPickedEvent = class extends Event {
             websocket.send(
                 ech.sendResponse(
                     Responses.CARDS_FLIPPED,
-                    game.round.allCards
-                )
+                    game.round.allCards,
+                ),
             );
         }
     }

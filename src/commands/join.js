@@ -45,7 +45,7 @@ exports.join = class extends Command {
         new PlayerJoinedEvent().trigger(game, player);
         new GameChangedEvent().trigger(
             ChangeAction.PLAYER_JOINED,
-            game.toJSON()
+            game.toJSON(),
         );
     }
 };

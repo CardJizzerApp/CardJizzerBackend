@@ -68,7 +68,7 @@ exports.App = class App {
             });
             client.on('error', () => {
                 reject(
-                    new Error('[!] Redis connection could not be established!')
+                    new Error('[!] Redis connection could not be established!'),
                 );
             });
             this.redisClient = client;

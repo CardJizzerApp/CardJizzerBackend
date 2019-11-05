@@ -42,12 +42,12 @@ class CreateGame extends Command {
                 password,
                 pointstowin,
                 maxroundtime,
-                gametitle
+                gametitle,
             );
             player.join(game.id);
             new GameChangedEvent().trigger(
                 ChangeAction.GAME_CREATED,
-                game.toJSON()
+                game.toJSON(),
             );
             return ech.sendResponse(Responses.OK, game.toJSON());
         });

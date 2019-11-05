@@ -16,7 +16,7 @@ async function getUserProfile(idToken) {
             env.GOOGLE_OAUTH_CLIENT_ID :
             env.TESTENV.GOOGLE_OAUTH_CLIENT_ID;
         const client = new OAuth2Client(
-            clientId
+            clientId,
         );
         const ticket = await client.verifyIdToken({
             audience: clientId,

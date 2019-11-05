@@ -6,27 +6,7 @@ const Ws = require('ws');
 const {App} = require('./app');
 const {allUsers} = require('./userUtils');
 
-/**
- * @param {{
- *   websocket,
- *   commandObject: {command: string, params: {}}}} testObject
- * @param {{errorCode: any, jsonData: any}} expectedOutput
- * @return {Promise}
- */
-function sendCommandAndExpect(testObject, expectedOutput) {
-    return new Promise((resolve) => {
-        const {websocket, commandObject} = testObject;
-        websocket.once('message', (msg) => {
-            const response = JSON.parse(msg);
-            expect(response.errorCode).to.be.oneOf(expectedOutput.errorCode);
-            if (expectedOutput.jsonData !== undefined) {
-                expect(response.errorCode).to.be.eql(expectedOutput.jsonData);
-            }
-            resolve(response);
-        });
-        websocket.send(JSON.stringify(commandObject));
-    });
-}
+const {sendCommandAndExpect} = require('./testUtils');
 
 /* eslint-disable max-lines-per-function */
 describe('commandTests', () => {
@@ -52,12 +32,12 @@ describe('commandTests', () => {
         };
         await sendCommandAndExpect(
             {commandObject, websocket},
-            {errorCode: [0]}
+            {errorCode: [0]},
         );
         commandObject.params.username = 'test2';
         await sendCommandAndExpect(
             {commandObject, websocket: player2},
-            {errorCode: [0]}
+            {errorCode: [0]},
         );
     });
     it('fetchGames', async () => {
@@ -66,7 +46,7 @@ describe('commandTests', () => {
         };
         await sendCommandAndExpect(
             {commandObject, websocket},
-            {errorCode: [0]}
+            {errorCode: [0]},
         );
     });
     let gameUUID;
@@ -108,24 +88,24 @@ describe('commandTests', () => {
         };
         await sendCommandAndExpect(
             {commandObject, websocket},
-            {errorCode: [7, 1000113]}
+            {errorCode: [7, 1000113]},
         );
         await sendCommandAndExpect(
             {commandObject, websocket: player2},
-            {errorCode: [0, 1000108]}
+            {errorCode: [0, 1000108]},
         );
     });
     it('startGame', async () => {
         await sendCommandAndExpect(
             {commandObject: {command: 'start'}, websocket},
-            {errorCode: [0]}
+            {errorCode: [0]},
         );
     });
     const cardUUIDs = [];
     it('fetchCards and save cardUUIDs', (done) => {
         sendCommandAndExpect(
             {commandObject: {command: 'fetchcards'}, websocket: websocket},
-            {errorCode: [0]}
+            {errorCode: [0]},
         );
         sendCommandAndExpect(
             {commandObject: {command: 'fetchcards'}, websocket: player2},

@@ -155,10 +155,5 @@ exports.FetchNames = fetchNames;
 exports.Login = login;
 
 exports.findCommand = function(commandname) {
-    for (let i = 0; i !== allCommands.length; i++) {
-        const command = allCommands[i];
-        if (command.commandname === commandname) {
-            return command;
-        }
-    }
+    return allCommands.filter((command) => command.commandname === commandname);
 };

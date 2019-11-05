@@ -42,7 +42,7 @@ function connectToEmptyDatabase() {
                         console.log('[*] Connected to empty database');
                         resolve();
                     });
-                }
+                },
             );
         });
     });

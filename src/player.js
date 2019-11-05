@@ -80,7 +80,7 @@ const player = class {
         }
         new GameChangedEvent().trigger(
             ChangeAction.PLAYER_JOINED,
-            this.toJSON()
+            this.toJSON(),
         );
         game.addToGame(this);
         return true;
@@ -96,7 +96,7 @@ const player = class {
         }
         new GameChangedEvent().trigger(
             ChangeAction.PLAYER_LEFT,
-            game.toJSON()
+            game.toJSON(),
         );
         return true;
     }

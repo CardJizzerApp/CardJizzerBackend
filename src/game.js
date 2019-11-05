@@ -100,15 +100,20 @@ const Game = class {
         ];
     }
     /**
+     * Sets the currentGameUUID of every player of the game to -1
+     */
+    kickAllPlayers() {
+        this.players.forEach((player) => {
+            player.currentGameUUID = -1;
+        });
+    }
+    /**
      * Stops the game.
      */
     stop() {
         this.state = GameState.LOBBY;
         setTimeout(() => {
-            for (let i = 0; i !== this.players.length; i++) {
-                const player = this.players[i];
-                player.currentGameUUID = -1;
-            }
+            kickAllPlayers();
             new GameChangedEvent().trigger(ChangeAction.GAME_REMOVED, null);
             delete allGames[allGames.indexOf(this)];
             delete this;
@@ -225,7 +230,7 @@ const Game = class {
             indexOfNewCardJizzer = 0;
         } else {
             const indexOfCurrentCardJizzer = this.players.indexOf(
-                this.round.cardJizzer
+                this.round.cardJizzer,
             );
             indexOfNewCardJizzer = indexOfCurrentCardJizzer;
             if (indexOfCurrentCardJizzer + 1 >= this.players.length) {
@@ -256,28 +261,26 @@ const Game = class {
             this.giveCard(player);
         }
     }
-
+    /**
+     * @param {any[]} arr
+     * @return {number} index
+     */
+    random(arr) {
+        return Math.floor(Math.random() *
+            Math.floor(arr.length));
+    }
     /**
      *
      * @param {*} type
      * @return {Card}
      */
     randomCard(type) {
-        if (type === 'call') {
-            return this.cards.calls[
-                Math.floor(Math.random()
-                    *
-                    Math.floor(this.cards.calls.length))
-            ];
-        } else {
-            return this.cards.responses[
-                Math.floor(Math.random()
-                    *
-                    Math.floor(this.cards.responses.length))
-            ];
-        }
+        const calls = this.cards.calls;
+        const responses = this.cards.responses;
+        return type == 'call' ?
+            calls[this.random(calls)] :
+            responses[this.random(responses)];
     }
-
     /**
      * @param {Player} player
      * @return {Card[]}
@@ -289,10 +292,7 @@ const Game = class {
      * Deletes the game.
      */
     deleteRoom() {
-        for (let i = 0; i !== this.players.length; i++) {
-            const player = this.players[i];
-            player.currentGameUUID = -1;
-        }
+        kickAllPlayers();
         delete allGames[this];
     }
     /**
@@ -348,11 +348,6 @@ module.exports.getDeckFromCache = getDeckFromCache;
  * @return {Game}
  */
 const getGameByUUID = function(uuid) {
-    for (let i = 0; i !== allGames.length; i++) {
-        const game = allGames[i];
-        if (game.id === uuid) {
-            return game;
-        }
-    }
+    return allGames.filter((game) => game.id === uuid);
 };
 module.exports.getGameByUUID = getGameByUUID;
