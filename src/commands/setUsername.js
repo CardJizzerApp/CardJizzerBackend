@@ -1,3 +1,8 @@
+/**
+ * @deprecated
+ * !- Deprecated
+ * This command is deprecated.
+ */
 const {Command} = require('../command');
 const {getPlayerByUUID, Player} = require('../player');
 const {allUsers} = require('../userUtils');

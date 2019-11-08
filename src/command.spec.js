@@ -193,14 +193,14 @@ describe('commandTests', () => {
             command: 'registeruser',
             params: {
                 email: 'testuser@gmail.com',
-                oauth_token: 'asdf',
+                idToken: 'asdf',
                 password: 'test',
                 username: 'test',
             },
         };
         await sendCommandAndExpect(
             {commandObject, websocket},
-            {errorCode: [0]},
+            {errorCode: [16]},
         );
     });
     after((done) => {

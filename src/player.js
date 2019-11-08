@@ -31,7 +31,7 @@ const player = class {
             if (game === undefined || hand === undefined) {
                 return false;
             }
-            const card = hand.filter((a) => a.uuid === cardUUID)[0];
+            const card = hand.find((a) => a.uuid === cardUUID);
             if (card === undefined) {
                 return false;
             }
