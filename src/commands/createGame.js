@@ -28,13 +28,14 @@ class CreateGame extends Command {
     /**
      * @param {string[]} args
      * @param {Websocket} ws
+     * @return {string}
      */
     run(args, ws) {
         const {maxplayers, deckids, password, pointstowin,
             maxroundtime, gametitle} = args;
-        this.isUserLoggedIn(ws, (player, err) => {
+        return this.isUserLoggedIn(ws, (player, err) => {
             if (err !== undefined) {
-                return;
+                return ech.sendResponse(Responses.NOT_LOGGED_IN, null);
             }
             const game = new Game(
                 maxplayers,
@@ -45,10 +46,6 @@ class CreateGame extends Command {
                 gametitle,
             );
             player.join(game.id);
-            new GameChangedEvent().trigger(
-                ChangeAction.GAME_CREATED,
-                game.toJSON(),
-            );
             return ech.sendResponse(Responses.OK, game.toJSON());
         });
     }

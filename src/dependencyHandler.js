@@ -1,1 +1,4 @@
-exports.Dependencies = {};
+exports.Dependencies = {
+    allGames: [],
+    allPlayers: [],
+};

@@ -6,6 +6,12 @@ const Ws = require('ws');
 const {App} = require('./app');
 const {allUsers} = require('./userUtils');
 
+const {
+    connectToEmptyDatabase,
+    disconnectDatabase,
+    mockUsersForTest,
+} = require('./testUtils');
+
 /**
  * @param {
 *  {websocket,
@@ -35,7 +41,9 @@ describe('commandTests', () => {
     let player2; let websocket;
     before((done) => {
         app = new App();
-        app.start().then(() => {
+        connectToEmptyDatabase().then(async () => {
+            await mockUsersForTest();
+            await app.start();
             websocket = new Ws('ws://localhost:' + app.Port);
             player2 = new Ws('ws://localhost:' + app.Port);
             done();
@@ -44,18 +52,22 @@ describe('commandTests', () => {
     it('should return true', () => {
         return assert(true);
     });
-    it('setUsername // login', async () => {
+    it('login', async () => {
         const commandObject = {
-            command: 'setusername',
+            command: 'login',
             params: {
-                username: 'test',
+                // Using database users | not Google OAuth - for further information visit: https://github.com/CardJizzerApp/CardJizzerBackend/issues/5
+                loginData: {
+                    password: 'test',
+                    username: 'test',
+                },
             },
         };
         await sendCommandAndExpect(
             {commandObject, websocket},
             {errorCode: [0]},
         );
-        commandObject.params.username = 'test2';
+        commandObject.params.loginData.username = 'test2';
         await sendCommandAndExpect(
             {commandObject, websocket: player2},
             {errorCode: [0]},
@@ -191,11 +203,10 @@ describe('commandTests', () => {
             {errorCode: [0]},
         );
     });
-    it('logout', () => {
-        websocket.close();
-        expect(allUsers.length).to.be.eql(2);
-    });
-    after(() => {
-        app.stop();
+    after((done) => {
+        disconnectDatabase().then(() => {
+            app.stop();
+            done();
+        });
     });
 });

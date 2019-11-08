@@ -1,7 +1,7 @@
 const mongoose = require('mongoose');
 
 const env = require('./environment').getEnvironment();
-
+const User = require('./models/user');
 
 exports.sendCommandAndExpect = require('./testUtils').sendCommandAndExpect;
 /**
@@ -28,6 +28,26 @@ function connectToEmptyDatabase() {
     });
 }
 exports.connectToEmptyDatabase = connectToEmptyDatabase;
+/**
+ * Adds two users to the database.
+ * @return {Promise}
+ */
+function mockUsersForTest() {
+    return new Promise(async (resolve) => {
+        await User.create({
+            email: 'test@mail.de',
+            password: 'test',
+            username: 'test',
+        });
+        await User.create({
+            email: 'test2@mail.de',
+            password: 'test',
+            username: 'test2',
+        });
+        resolve();
+    });
+}
+exports.mockUsersForTest = mockUsersForTest;
 
 /**
  * Disconnect database

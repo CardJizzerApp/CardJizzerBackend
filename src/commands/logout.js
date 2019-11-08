@@ -1,5 +1,5 @@
 const {Command} = require('../command');
-const {allUsers} = require('../userUtils');
+const {Dependencies} = require('../dependencyHandler');
 
 const {ErrorCodeHelper, Responses} = require('../helper');
 const ech = new ErrorCodeHelper();
@@ -9,21 +9,19 @@ exports.logout = class extends Command {
      * Logout command.
      */
     constructor() {
-        super('logout', 0);
+        super('logout', []);
     }
     /**
-     * @param {string[]} args
+     * @param {string[]} _
      * @param {Websocket} ws
      * @return {string}
      */
-    run(args, ws) {
-        for (let i = 0; i !== allUsers.length; i++) {
-            const player = allUsers[i];
-            if (player.uuid === ws.uuid) {
-                allUsers.splice(i, 1);
-                return ech.sendResponse(Responses.OK, null);
-            }
+    run(_, ws) {
+        const player = Dependencies.allPlayers.find((c) => c.uuid === ws.uuid);
+        if (player === undefined) {
+            return ech.sendResponse(Responses.NOT_LOGGED_IN, null);
         }
-        return ech.sendResponse(Responses.NOT_LOGGED_IN, null);
+        Dependencies.allPlayers.reduce((c) => c.uuid === ws.uuid);
+        return ech.sendResponse(Responses.OK, null);
     }
 };

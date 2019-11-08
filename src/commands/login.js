@@ -1,3 +1,7 @@
+const {Player} = require('../player');
+
+const User = require('../models/user');
+
 const {Command} = require('../command');
 const {ErrorCodeHelper, Responses} = require('../helper');
 
@@ -10,35 +14,34 @@ exports.login = class extends Command {
      * Fetch names of all players in current game.
      */
     constructor() {
-        super('login', ['idToken']);
+        super('login', ['loginData'], true);
     }
     /**
      * @param {string[]} args
      * @param {Websocket} ws
      * @return {string}
      */
-    run(args, ws) {
-        const response = this.login(ws, args['idToken']);
-        return ech.sendResponse(response, null);
+    async run(args, ws) {
+        return await this.login(ws, args.loginData);
     }
     /**
      * @param {Websocket} ws
-     * @param {string} idToken
+     * @param {any} loginData
      * @return {Response}
      */
-    async login(ws, idToken) {
-        try {
-            const profile = await getUserProfile(idToken);
-            if (!isUserAlreadyRegistered(profile.username, profile.email)) {
-                return Responses.NOT_REGISTERED_YET;
-            }
-            this.setRedis(username, JSON.stringify({
-                loggedIn: true,
-                ws,
-            }));
-            return Responses.OK;
-        } catch (error) {
-            return Responses.INVALID_TOKEN;
+    async login(ws, loginData) {
+        const loginWithIdToken = loginData.idToken !== undefined;
+        if (!loginWithIdToken && loginData.username === undefined) {
+            return ech.sendResponse(Responses.INVALID_USAGE);
         }
+        const username = loginWithIdToken ?
+            (await User.find({idToken: loginData.idToken}))[0].username :
+            (await User.find({password: loginData.password,
+                username: loginData.username}))[0].username;
+        if (username === undefined) {
+            return ech.sendResponse(Responses.INVALID_TOKEN, null);
+        }
+        new Player(ws, username);
+        return ech.sendResponse(Responses.OK, null);
     }
 };

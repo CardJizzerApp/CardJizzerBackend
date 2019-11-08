@@ -16,3 +16,9 @@
 
 ## [0.0.4] - 2019-08-23
 - gitlab-ci.yml
+
+## [0.0.6] - 2019-08-11
+### Added:
+- Register
+- Login
+- Tests

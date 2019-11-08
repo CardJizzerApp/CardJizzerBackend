@@ -52,7 +52,7 @@ exports.Command = class {
      */
     getRedis(key) {
         return new Promise((resolve) => {
-            Dependencies['redis'].get(key, (err, response) => {
+            Dependencies['redis'].get(key, (_, response) => {
                 resolve(response);
             });
         });
@@ -61,11 +61,11 @@ exports.Command = class {
      * Check if user is logged in
      * @param {Websocket} ws
      * @param {function (player, err)} cb
-     * @return {boolean}
+     * @return {Promise}
      */
     isUserLoggedIn(ws, cb) {
         const player = getPlayerByUUID(ws.uuid);
-        if (player === undefined) {
+        if (player === null) {
             return cb(undefined, new Error('User not logged in'));
         }
         return cb(player, undefined);

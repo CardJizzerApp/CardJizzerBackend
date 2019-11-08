@@ -1,5 +1,6 @@
 const {Command} = require('../command');
-const {allGames} = require('../game');
+
+const {Dependencies} = require('../dependencyHandler');
 
 const {ErrorCodeHelper, Responses} = require('../helper');
 const ech = new ErrorCodeHelper();
@@ -13,15 +14,10 @@ exports.fetchGames = class extends Command {
         super('fetchgames', []);
     }
     /**
-     * @param {string[]} args
-     * @param {Websocket} ws
      * @return {string}
      */
-    run(args) {
-        const allGamesToServe = [];
-        allGames.forEach((game) => {
-            allGamesToServe.push(game.toJSON());
-        });
-        return ech.sendResponse(Responses.OK, allGamesToServe);
+    run() {
+        const allGamesClone = Dependencies['allGames'].map((c) => c.toJSON());
+        return ech.sendResponse(Responses.OK, allGamesClone);
     }
 };

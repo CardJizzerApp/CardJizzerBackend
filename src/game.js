@@ -15,10 +15,6 @@ const api = new CardCastAPI.CardcastAPI();
 
 const cardCache = {};
 
-const allGames = [];
-
-module.exports.allGames = allGames;
-
 const GameState = {
     INGAME: {joinable: false},
     LOBBY: {joinable: true},
@@ -52,8 +48,7 @@ const Game = class {
         };
         this.scoreboard = {};
         this.playerCardStacks = {};
-        allGames.push(this);
-        Dependencies['redis'].set('allgames', JSON.stringify(allGames));
+        Dependencies['allGames'].push(this);
     }
     /**
      * Starts the game.
@@ -348,6 +343,6 @@ module.exports.getDeckFromCache = getDeckFromCache;
  * @return {Game}
  */
 const getGameByUUID = function(uuid) {
-    return allGames.filter((game) => game.id === uuid)[0];
+    return Dependencies['allGames'].filter((game) => game.id === uuid)[0];
 };
 module.exports.getGameByUUID = getGameByUUID;

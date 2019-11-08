@@ -6,8 +6,12 @@ const UserSchema = new Schema({
         required: true,
         type: String,
     },
-    token: {
+    idToken: {
         required: false,
+        type: String,
+    },
+    password: {
+        required: true,
         type: String,
     },
     username: {

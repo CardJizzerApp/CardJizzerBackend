@@ -1,3 +1,4 @@
+const passwordHash = require('password-hash');
 
 const {Command} = require('../command');
 
@@ -45,7 +46,8 @@ exports.registerUser = class extends Command {
         if (!validToken) {
             return false;
         }
-        await User.create({idToken, password, username}, (err) => {
+        const hash = passwordHash.generate(password);
+        await User.create({idToken, password: hash, username}, (err) => {
             if (err !== null) {
                 return false;
             }

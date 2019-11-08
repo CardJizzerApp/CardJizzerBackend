@@ -3,7 +3,7 @@ const {v4} = require('uuid');
 const {GameChangedEvent, ChangeAction} = require('./events/gameChangedEvent');
 
 const {getGameByUUID} = require('./game');
-const {allUsers} = require('./userUtils');
+const {Dependencies} = require('./dependencyHandler');
 
 const player = class {
     /**
@@ -17,13 +17,7 @@ const player = class {
         this.username = username;
         this.currentGameUUID = -1;
         this.lastPing = new Date().getTime();
-        // TODO: Uncomment without failing tests.
-        // This.handle = setTimeout(() => {
-        //     If (new Date().getTime() - this.lastPing > 1000*15) {
-        //         ClearTimeout(this.handle);
-        //     }
-        // }, 1000);
-        allUsers.push(this);
+        Dependencies['allPlayers'].push(this);
     }
     /**
      * @param {string} cardUUID
@@ -101,12 +95,12 @@ const player = class {
         return true;
     }
     /**
-     * Removes the player from the allUsers array
+     * Removes the player from Redis.
      * @return {boolean}
      */
     destroy() {
         let length = allUsers.length;
-        removeItem(allUsers, allUsers.indexOf(this));
+        Dependencies['redis'].set(`player-${this.uuid}`);
         length = length - 1;
         if (allUsers.length === length) {
             return true;
@@ -132,24 +126,6 @@ module.exports.Player = player;
  * @param {string} uuid
  * @return {Player}
  */
-const getPlayerByUUID = function(uuid) {
-    for (let i = 0; i !== allUsers.length; i++) {
-        const player = allUsers[i];
-        const pUUID = player.uuid;
-        if (uuid === pUUID) {
-            return player;
-        }
-    }
-    return undefined;
+module.exports.getPlayerByUUID = (uuid) => {
+    return Dependencies['allPlayers'].find((c) => c.uuid === uuid);
 };
-module.exports.getPlayerByUUID = getPlayerByUUID;
-
-const removeItem = function(arr, index) {
-    const newArr = [];
-    for (let i = 0; i !== arr.length; i++) {
-        if (i === index) continue;
-        newArr.push(arr[i]);
-    }
-    return newArr;
-};
-module.exports.removeItem = removeItem;

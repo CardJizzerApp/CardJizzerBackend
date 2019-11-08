@@ -15,14 +15,14 @@ describe('Login Tests', () => {
         app.start().then(() => done());
     });
     it('Login with invalid token should return false', async () => {
-        const response = await testClass.login(undefined, '');
-        expect(response).to.be.eql(Responses.INVALID_TOKEN);
+        const response = JSON.parse(await testClass.login(undefined, ''));
+        expect(response.errorCode).to.be.eql(Responses.INVALID_USAGE.errorCode);
     });
     it('Login with valid token should return true', async () => {
-        const response = await testClass.login(
-            undefined,
-            env.TESTENV.GOOGLE_ACCESS_TOKEN);
         if (env.TESTENV.OAUTH_TESTS) {
+            const response = JSON.parse(await testClass.login(
+                undefined,
+                env.TESTENV.GOOGLE_ACCESS_TOKEN));
             expect(response).to.be.eql(responses.OK);
         }
     });
