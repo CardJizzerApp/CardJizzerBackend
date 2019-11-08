@@ -5,8 +5,6 @@ const User = require('../models/user');
 const {Command} = require('../command');
 const {ErrorCodeHelper, Responses} = require('../helper');
 
-const {getUserProfile, isUserAlreadyRegistered} = require('../oAuthUtils');
-
 const ech = new ErrorCodeHelper();
 
 exports.login = class extends Command {

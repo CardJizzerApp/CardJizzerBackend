@@ -45,6 +45,8 @@ class CreateGame extends Command {
                 maxroundtime,
                 gametitle,
             );
+
+            new GameChangedEvent().trigger(ChangeAction.GAME_CREATED);
             player.join(game.id);
             return ech.sendResponse(Responses.OK, game.toJSON());
         });

@@ -4,7 +4,6 @@ const expect = ChaiS.expect;
 const Ws = require('ws');
 
 const {App} = require('./app');
-const {allUsers} = require('./userUtils');
 
 const {
     connectToEmptyDatabase,
