@@ -24,10 +24,9 @@ exports.registerUser = class extends Command {
     }
     /**
      * @param {string[]} args
-     * @param {Websocket} ws
      * @return {string}
      */
-    async run(args, ws) {
+    async run(args) {
         const response = await this.registerUser(args) ?
             Responses.OK :
             Responses.INVALID_TOKEN;

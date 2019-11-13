@@ -110,12 +110,13 @@ exports.App = class App {
         const requiredArgs = command.requiredArgs;
         const params = commandObject.params === undefined ?
             {} : commandObject.params;
+        let valid = true;
         requiredArgs.forEach((arg) => {
             if (Object.keys(params).find((c) => c === arg) === undefined) {
-                return Responses.INVALID_USAGE;
+                valid = false;
             }
         });
-        return command;
+        return valid ? command : undefined;
     }
     /**
      * @param {string} message
