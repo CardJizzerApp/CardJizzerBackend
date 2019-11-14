@@ -1,5 +1,9 @@
 # Changelog
 
+## [0.1.1] - 2019-11-14
+### Added:
+- Prepared responses to handle queueIds.
+
 ## [0.1.0] - 2019-11-13
 ### Added:
 - CreateGame

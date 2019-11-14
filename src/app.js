@@ -118,6 +118,23 @@ exports.App = class App {
         });
         return valid ? command : undefined;
     }
+
+    /**
+     * @param {any} requestObject
+     * @param {any} responseObject
+     * @return {any} preparedResponse
+     */
+    prepareResponse(requestObject, responseObject) {
+        const preparedResponse = JSON.parse(responseObject);
+        const queueId = requestObject.queueId;
+        console.log(requestObject);
+        if (queueId !== undefined) {
+            console.log('Adding QueueId');
+            preparedResponse.queueId = queueId;
+        }
+        return JSON.stringify(preparedResponse);
+    }
+
     /**
      * @param {string} message
      * @param {Websocket} ws
@@ -137,10 +154,10 @@ exports.App = class App {
             }
             if (command.async === undefined || !command.async) {
                 const response = command.run(requestObject.params, ws);
-                resolve(response);
+                return resolve(this.prepareResponse(requestObject, response));
             }
             const response = await command.run(requestObject.params, ws);
-            resolve(response);
+            return resolve(this.prepareResponse(requestObject, response));
         });
     }
     /**
