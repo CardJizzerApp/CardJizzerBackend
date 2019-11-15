@@ -1,5 +1,13 @@
 # Changelog
 
+## [0.1.3] - 2019-11-15
+### Fixed:
+- deploy script
+
+## [0.1.2] - 2019-11-15
+### Added:
+- Working deploy script
+
 ## [0.1.1] - 2019-11-14
 ### Added:
 - Prepared responses to handle queueIds.

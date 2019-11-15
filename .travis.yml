@@ -1,3 +1,5 @@
+sudo: false
+
 env:
   global:
     - CC_TEST_REPORTER_ID=55a64d2d95701010a6786c057d3b73959b5810e6737be127dd3baa9389385d72
@@ -16,7 +18,7 @@ before_install:
   
 install:
   - npm i
-  - apt-get install jq --yes
+  - sudo apt-get install jq
 
 before_script:
   - curl -L https://codeclimate.com/downloads/test-reporter/test-reporter-latest-linux-amd64 > ./cc-test-reporter
