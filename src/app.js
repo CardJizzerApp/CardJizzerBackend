@@ -127,9 +127,7 @@ exports.App = class App {
     prepareResponse(requestObject, responseObject) {
         const preparedResponse = JSON.parse(responseObject);
         const queueId = requestObject.queueId;
-        console.log(requestObject);
         if (queueId !== undefined) {
-            console.log('Adding QueueId');
             preparedResponse.queueId = queueId;
         }
         return JSON.stringify(preparedResponse);

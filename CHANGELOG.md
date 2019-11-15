@@ -1,5 +1,9 @@
 # Changelog
 
+## [0.1.4] - 2019-11-15
+### Refactored:
+- Removed console.log statements
+
 ## [0.1.3] - 2019-11-15
 ### Fixed:
 - deploy script
