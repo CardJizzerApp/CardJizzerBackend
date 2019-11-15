@@ -16,6 +16,7 @@ before_install:
   
 install:
   - npm i
+  - apt-get install jq --yes
 
 before_script:
   - curl -L https://codeclimate.com/downloads/test-reporter/test-reporter-latest-linux-amd64 > ./cc-test-reporter
@@ -34,6 +35,3 @@ deploy:
   provider: script
   skip_cleanup: true
   script: chmod +x .travis/deploy.sh && .travis/deploy.sh
-  on:
-    tags: true
-    all_branches: false
