@@ -37,14 +37,15 @@ class CreateGame extends Command {
             if (err !== undefined) {
                 return ech.sendResponse(Responses.NOT_LOGGED_IN, null);
             }
-            const game = new Game(
-                maxplayers,
+            const game = new Game({
                 deckids,
+                gametitle,
+                maxplayers,
+                maxroundtime,
+                ownerUUID: ws.uuid,
                 password,
                 pointstowin,
-                maxroundtime,
-                gametitle,
-            );
+            });
 
             new GameChangedEvent().trigger(ChangeAction.GAME_CREATED);
             player.join(game.id);

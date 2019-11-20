@@ -24,7 +24,7 @@ module.exports.GameState = GameState;
 
 const Game = class {
     /**
-     * @param {any} gameSettings
+     * @param {object} gameSettings
      */
     constructor(gameSettings) {
         // Maxplayers, deckIds, password, pointsToWin,
@@ -36,7 +36,8 @@ const Game = class {
         this.password = gameSettings.password;
         this.pointsToWin = gameSettings.pointstowin;
         this.maxRoundTime = gameSettings.maxroundtime;
-        this.title = gameSettings.title;
+        this.title = gameSettings.gametitle;
+        this.ownerUUID = gameSettings.ownerUUID;
         this.state = GameState.LOBBY;
         this.players = [];
         if (this.title === undefined) {
@@ -311,6 +312,7 @@ const Game = class {
             deckIds: this.deckIds,
             id: this.id,
             maxplayers: this.maxplayers,
+            ownerUUID: this.ownerUUID,
             passwordRequired: this.passwordRequired,
             players: this.allPlayersToJSON(),
             pointsToWin: this.pointsToWin,
