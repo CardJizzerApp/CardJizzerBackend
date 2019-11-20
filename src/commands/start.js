@@ -20,6 +20,9 @@ exports.start = class extends Command {
             if (game.state !== GameState.LOBBY) {
                 return ech.sendResponse(Responses.GAME_ALREADY_INGAME, null);
             }
+            if (ws.uuid !== game.ownerUUID) {
+                return ech.sendResponse(Responses.NOT_LOBBY_OWNER, null);
+            }
             return game.start().then(() => {
                 return ech.sendResponse(Responses.OK, game);
             });

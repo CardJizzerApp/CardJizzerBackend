@@ -38,6 +38,7 @@ module.exports.Responses = {
     INVALID_TOKEN: {errorCode: 16, message: 'Invalid OAuth token'},
     NOT_REGISTERED_YET: {errorCode: 17, message: 'Not registered yet'},
     ALREADY_INGAME: {errorCode: 18, message: 'You are already ingame.'},
+    NOT_LOBBY_OWNER: {errorCode: 19, message: 'You are not the lobby owner.'},
     // Event Responses
     CARD_PLAYED: {errorCode: 1000101, message: 'Player played card!'},
     CARD_JIZZER_PICKED: {errorCode: 1000102, message: 'Cardjizzer picked!'},

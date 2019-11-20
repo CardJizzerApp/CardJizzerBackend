@@ -1,6 +1,10 @@
 # Changelog
 
-## [0.1.5] - 2019-11-20
+## [0.1.51] - 2019-11-20 / [hotfix]
+### Fix:
+- Only the lobby owner now has the privilige to start the lobby
+
+## [0.1.5] - 2019-11-20 / [broken]
 ### Added:
 - Only the lobby owner now has the privilige to start the lobby
 
